@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/nav') %>
+
+    <section class="services-hero">
+        <div class="services-hero-content">
+            <h1>Our Services</h1>
+            <p>Comprehensive digital solutions for your business growth.</p>
+        </div>
+    </section>
+
+    <section class="services-tabs">
+        <div class="section-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="web-development">Web Development</button>
+                <button class="tab-btn" data-tab="branding">Branding</button>
+                <button class="tab-btn" data-tab="marketing">Digital Marketing</button>
+                <button class="tab-btn" data-tab="ecommerce">E-commerce</button>
+            </div>
+
+            <div class="tab-content">
+                <div id="web-development" class="service-content active">
+                    <h3>Website Design & Development</h3>
+                    <p>Custom websites tailored to your brand and industry needs with responsive design and SEO optimization.</p>
+                    <ul>
+                        <li>Responsive Web Design</li>
+                        <li>Custom Development</li>
+                        <li>CMS Integration</li>
+                        <li>SEO Optimization</li>
+                        <li>Performance Optimization</li>
+                    </ul>
+                    <div class="service-image">
+                        <img src="/images/web-dev.jpg" alt="Web Development">
+                    </div>
+                </div>
+
+                <div id="branding" class="service-content">
+                    <h3>Branding & Graphic Design</h3>
+                    <p>Create a powerful brand identity that stands out in today's competitive market.</p>
+                    <ul>
+                        <li>Logo Design</li>
+                        <li>Brand Identity</li>
+                        <li>Marketing Materials</li>
+                        <li>Brand Guidelines</li>
+                        <li>Visual Strategy</li>
+                    </ul>
+                    <div class="service-image">
+                        <img src="/images/branding.jpg" alt="Branding">
+                    </div>
+                </div>
+
+                <div id="marketing" class="service-content">
+                    <h3>Digital Marketing</h3>
+                    <p>Comprehensive marketing strategies to increase your online visibility and conversions.</p>
+                    <ul>
+                        <li>SEO & SEM</li>
+                        <li>Social Media Marketing</li>
+                        <li>Content Marketing</li>
+                        <li>Email Marketing</li>
+                        <li>Analytics & Reporting</li>
+                    </ul>
+                </div>
+
+                <div id="ecommerce" class="service-content">
+                    <h3>E-commerce Solutions</h3>
+                    <p>Build and optimize your online store to maximize sales and customer experience.</p>
+                    <ul>
+                        <li>Online Store Development</li>
+                        <li>Payment Integration</li>
+                        <li>Inventory Management</li>
+                        <li>Conversion Optimization</li>
+                        <li>Mobile Commerce</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Our Process</h2>
+                <p>How we deliver exceptional results</p>
+            </div>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Discovery</h4>
+                    <p>We analyze your business, goals, and target audience.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Strategy</h4>
+                    <p>We develop a customized digital strategy for your needs.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Implementation</h4>
+                    <p>We execute the strategy with precision and attention to detail.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Optimization</h4>
+                    <p>We continuously monitor and optimize for better results.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

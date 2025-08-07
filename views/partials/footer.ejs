@@ -1,0 +1,100 @@
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Robe</h3>
+            <p>Taking local businesses global through digital transformation.</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-envelope"></i> hello@robeglobal.com</p>
+                <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            </div>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="/services">Services</a></li>
+                <li><a href="/portfolio">Portfolio</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/testimonials">Testimonials</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="/services#web-development">Web Development</a></li>
+                <li><a href="/services#branding">Branding</a></li>
+                <li><a href="/services#marketing">Digital Marketing</a></li>
+                <li><a href="/services#ecommerce">E-commerce</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>Connect</h3>
+            <div class="social-links">
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            </div>
+            <div class="newsletter">
+                <h4>Subscribe to our newsletter</h4>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" name="email" placeholder="Your email" required>
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+                <div id="newsletter-message" style="margin-top: 10px; font-size: 14px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; <%= new Date().getFullYear() %> Robe Digital Agency. All rights reserved.</p>
+        <div class="legal-links">
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms of Service</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Chat Widget -->
+<div class="chat-widget">
+    <button class="chat-button">
+        <i class="fas fa-comment"></i>
+        Chat with us
+    </button>
+</div>
+
+<script>
+// Newsletter form submission
+document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const email = formData.get('email');
+    const messageDiv = document.getElementById('newsletter-message');
+    
+    try {
+        const response = await fetch('/newsletter', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            messageDiv.innerHTML = '<span style="color: #4caf50;">' + result.message + '</span>';
+            e.target.reset();
+        } else {
+            messageDiv.innerHTML = '<span style="color: #f44336;">' + result.message + '</span>';
+        }
+    } catch (error) {
+        messageDiv.innerHTML = '<span style="color: #f44336;">Sorry, there was an error. Please try again.</span>';
+    }
+    
+    // Clear message after 5 seconds
+    setTimeout(() => {
+        messageDiv.innerHTML = '';
+    }, 5000);
+});
+</script>

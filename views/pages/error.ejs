@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/nav') %>
+
+    <section class="error-section">
+        <div class="section-container">
+            <div class="error-content">
+                <h1>500</h1>
+                <h2>Server Error</h2>
+                <p>Something went wrong on our end. Please try again later.</p>
+                <a href="/" class="primary-btn">Go Home</a>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+
+    <style>
+        .error-section {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .error-content h1 {
+            font-size: 8rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        .error-content h2 {
+            margin-bottom: 1rem;
+        }
+        .error-content p {
+            margin-bottom: 2rem;
+            color: var(--medium-gray);
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,134 @@
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .our-story .section-container,
+    .contact-container,
+    .service-content.active {
+        grid-template-columns: 1fr;
+    }
+
+    .story-image {
+        order: -1;
+    }
+
+    .service-image {
+        order: -1;
+    }
+
+    .case-study {
+        grid-template-columns: 1fr;
+    }
+
+    .case-image {
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: white;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: var(--transition);
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .hero h1, 
+    .about-hero h1, 
+    .portfolio-hero h1, 
+    .services-hero h1, 
+    .testimonials-hero h1, 
+    .contact-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .stats-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .service-features {
+        grid-template-columns: 1fr;
+    }
+
+    .process-steps {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .primary-btn, .secondary-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    .hero, 
+    .about-hero, 
+    .portfolio-hero, 
+    .services-hero, 
+    .testimonials-hero, 
+    .contact-hero {
+        height: 70vh;
+        min-height: 400px;
+        text-align: center;
+    }
+
+    .hero-content, 
+    .about-hero-content, 
+    .portfolio-hero-content, 
+    .services-hero-content, 
+    .testimonials-hero-content, 
+    .contact-hero-content {
+        padding: 0 1rem;
+    }
+
+    .portfolio-filter {
+        flex-wrap: wrap;
+    }
+
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .case-studies-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-button {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}

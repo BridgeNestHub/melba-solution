@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body class="admin-body">
+    <div class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="/images/logo1.png" alt="Robe Logo">
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/admin/dashboard" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>Dashboard
+                </a>
+                <a href="/admin/contacts" class="nav-item active">
+                    <i class="fas fa-envelope"></i>Contacts
+                </a>
+                <a href="/admin/projects" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>Projects
+                </a>
+                <a href="/admin/settings" class="nav-item">
+                    <i class="fas fa-cog"></i>Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <form method="POST" action="/admin/logout">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Contact Management</h1>
+                <div class="admin-user">
+                    <i class="fas fa-user-circle"></i>Welcome, <%= adminUser %>
+                </div>
+            </header>
+
+            <div class="contacts-table">
+                <% contacts.forEach(contact => { %>
+                    <div class="contact-row">
+                        <div class="contact-details">
+                            <h4><%= contact.name %></h4>
+                            <p><%= contact.email %> | <%= contact.service %></p>
+                        </div>
+                        <span class="status status-<%= contact.status %>"><%= contact.status %></span>
+                    </div>
+                <% }) %>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

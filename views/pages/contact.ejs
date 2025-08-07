@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/nav') %>
+
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <h1>Get In Touch</h1>
+            <p>Ready to transform your business? Let's discuss how we can help you achieve your digital goals.</p>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section">
+        <div class="section-container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Let's Start a Conversation</h2>
+                    <p>We're here to help you take your business to the next level. Reach out to us and let's discuss your project.</p>
+                    
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email Us</h4>
+                                <p>hello@robeglobal.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Call Us</h4>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Business Hours</h4>
+                                <p>Mon - Fri: 9:00 AM - 6:00 PM EST</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-connect">
+                        <h4>Connect With Us</h4>
+                        <div class="social-links">
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" method="POST" action="/contact">
+                        <h3>Send Us a Message</h3>
+                        
+                        <!-- Display validation errors -->
+                        <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                            <div class="error-messages">
+                                <% errors.forEach(error => { %>
+                                    <div class="error-message">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <%= error.msg %>
+                                    </div>
+                                <% }) %>
+                            </div>
+                        <% } %>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="company">Company Name</label>
+                                <input type="text" id="company" name="company" value="<%= typeof formData !== 'undefined' ? formData.company || '' : '' %>">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="service">Service Interested In *</label>
+                                <select id="service" name="service" required>
+                                    <option value="">Select a service</option>
+                                    <option value="web-development" <%= typeof formData !== 'undefined' && formData.service === 'web-development' ? 'selected' : '' %>>Web Development</option>
+                                    <option value="branding" <%= typeof formData !== 'undefined' && formData.service === 'branding' ? 'selected' : '' %>>Branding & Design</option>
+                                    <option value="digital-marketing" <%= typeof formData !== 'undefined' && formData.service === 'digital-marketing' ? 'selected' : '' %>>Digital Marketing</option>
+                                    <option value="ecommerce" <%= typeof formData !== 'undefined' && formData.service === 'ecommerce' ? 'selected' : '' %>>E-commerce Solutions</option>
+                                    <option value="consultation" <%= typeof formData !== 'undefined' && formData.service === 'consultation' ? 'selected' : '' %>>Consultation</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="budget">Project Budget</label>
+                                <select id="budget" name="budget">
+                                    <option value="">Select budget range</option>
+                                    <option value="under-5k" <%= typeof formData !== 'undefined' && formData.budget === 'under-5k' ? 'selected' : '' %>>Under $5,000</option>
+                                    <option value="5k-15k" <%= typeof formData !== 'undefined' && formData.budget === '5k-15k' ? 'selected' : '' %>>$5,000 - $15,000</option>
+                                    <option value="15k-50k" <%= typeof formData !== 'undefined' && formData.budget === '15k-50k' ? 'selected' : '' %>>$15,000 - $50,000</option>
+                                    <option value="over-50k" <%= typeof formData !== 'undefined' && formData.budget === 'over-50k' ? 'selected' : '' %>>Over $50,000</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="timeline">Project Timeline</label>
+                            <select id="timeline" name="timeline">
+                                <option value="">Select timeline</option>
+                                <option value="asap" <%= typeof formData !== 'undefined' && formData.timeline === 'asap' ? 'selected' : '' %>>ASAP</option>
+                                <option value="1-3-months" <%= typeof formData !== 'undefined' && formData.timeline === '1-3-months' ? 'selected' : '' %>>1-3 months</option>
+                                <option value="3-6-months" <%= typeof formData !== 'undefined' && formData.timeline === '3-6-months' ? 'selected' : '' %>>3-6 months</option>
+                                <option value="flexible" <%= typeof formData !== 'undefined' && formData.timeline === 'flexible' ? 'selected' : '' %>>Flexible</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Project Details *</label>
+                            <textarea id="message" name="message" rows="5" placeholder="Tell us about your project, goals, and any specific requirements..." required><%= typeof formData !== 'undefined' ? formData.message || '' : '' %></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Send Message</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+
+                        <p class="form-note">
+                            <i class="fas fa-shield-alt"></i>
+                            Your information is secure and will never be shared with third parties.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Quick answers to common questions about our services</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How long does a typical project take?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Project timelines vary depending on scope and complexity. A simple website typically takes 4-6 weeks, while comprehensive branding and marketing projects can take 8-12 weeks. We'll provide a detailed timeline during our initial consultation.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What's included in your web development service?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our web development service includes custom design, responsive development, SEO optimization, content management system, security features, performance optimization, and 3 months of free support and maintenance.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Do you work with businesses outside the US?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We work with clients globally. Our team is experienced in working across different time zones and we use modern collaboration tools to ensure smooth communication throughout the project.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What makes Robe different from other agencies?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We focus specifically on transforming local businesses into global brands. Our team combines technical expertise with deep understanding of local market dynamics and global digital trends. We provide end-to-end solutions rather than just individual services.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+
+    <script src="/js/main.js"></script>
+    <script>
+        // Form enhancement
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('.submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            
+            submitBtn.classList.add('btn--loading');
+            btnText.textContent = 'Sending...';
+            submitBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

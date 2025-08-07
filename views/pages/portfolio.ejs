@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+    <%- include('../partials/nav') %>
+
+    <section class="portfolio-hero">
+        <div class="portfolio-hero-content">
+            <h1>Our Portfolio</h1>
+            <p>Showcasing our successful digital transformation projects.</p>
+        </div>
+    </section>
+
+    <section class="portfolio-filter">
+        <div class="section-container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="web">Web Development</button>
+                <button class="filter-btn" data-filter="branding">Branding</button>
+                <button class="filter-btn" data-filter="marketing">Marketing</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="portfolio-grid-section">
+        <div class="section-container">
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-category="web">
+                    <div class="portfolio-image">
+                        <img src="/images/project1.jpg" alt="TechCorp Website">
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>TechCorp Website</h3>
+                        <p>Modern corporate website with custom CMS</p>
+                        <a href="#" class="view-project">View Project</a>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="branding">
+                    <div class="portfolio-image">
+                        <img src="/images/project2.jpg" alt="GreenLife Branding">
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>GreenLife Branding</h3>
+                        <p>Complete brand identity and marketing materials</p>
+                        <a href="#" class="view-project">View Project</a>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="web">
+                    <div class="portfolio-image">
+                        <img src="/images/case1.jpg" alt="E-commerce Store">
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Fashion E-commerce</h3>
+                        <p>Custom online store with payment integration</p>
+                        <a href="#" class="view-project">View Project</a>
+                    </div>
+                </div>
+
+                <div class="portfolio-item" data-category="marketing">
+                    <div class="portfolio-image">
+                        <img src="/images/case2.jpg" alt="Marketing Campaign">
+                    </div>
+                    <div class="portfolio-overlay">
+                        <h3>Digital Marketing Campaign</h3>
+                        <p>Multi-channel marketing strategy and execution</p>
+                        <a href="#" class="view-project">View Project</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="case-studies">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Case Studies</h2>
+                <p>Detailed results from our successful projects</p>
+            </div>
+            <div class="case-studies-grid">
+                <div class="case-study-card">
+                    <div class="case-image">
+                        <img src="/images/project1.jpg" alt="Case Study">
+                    </div>
+                    <div class="case-content">
+                        <h3>TechCorp Digital Transformation</h3>
+                        <p>Complete website redesign and digital marketing strategy that increased online presence.</p>
+                        <div class="results">
+                            <div class="result-item">
+                                <span class="result-number">300%</span>
+                                <span>Traffic Increase</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-number">150%</span>
+                                <span>Lead Generation</span>
+                            </div>
+                        </div>
+                        <a href="#" class="read-case">Read Full Case Study →</a>
+                    </div>
+                </div>
+
+                <div class="case-study-card">
+                    <div class="case-image">
+                        <img src="/images/project2.jpg" alt="Case Study">
+                    </div>
+                    <div class="case-content">
+                        <h3>GreenLife Brand Launch</h3>
+                        <p>Brand identity creation and market positioning for sustainable products company.</p>
+                        <div class="results">
+                            <div class="result-item">
+                                <span class="result-number">200%</span>
+                                <span>Brand Recognition</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-number">85%</span>
+                                <span>Customer Retention</span>
+                            </div>
+                        </div>
+                        <a href="#" class="read-case">Read Full Case Study →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

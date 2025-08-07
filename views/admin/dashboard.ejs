@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body class="admin-body">
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="/images/logo1.png" alt="Robe Logo">
+                <h3>Admin Panel</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/admin/dashboard" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+                <a href="/admin/contacts" class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                    Contacts
+                </a>
+                <a href="/admin/projects" class="nav-item">
+                    <i class="fas fa-project-diagram"></i>
+                    Projects
+                </a>
+                <a href="/admin/settings" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <form method="POST" action="/admin/logout">
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Dashboard</h1>
+                <div class="admin-user">
+                    <i class="fas fa-user-circle"></i>
+                    Welcome, <%= adminUser %>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.totalProjects %></h3>
+                        <p>Total Projects</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.activeProjects %></h3>
+                        <p>Active Projects</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.totalClients %></h3>
+                        <p>Total Clients</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.monthlyRevenue %></h3>
+                        <p>Monthly Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-grid">
+                <!-- Recent Contacts -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Contacts</h3>
+                        <a href="/admin/contacts" class="view-all">View All</a>
+                    </div>
+                    <div class="card-content">
+                        <% if (data.recentContacts.length > 0) { %>
+                            <% data.recentContacts.forEach(contact => { %>
+                                <div class="contact-item">
+                                    <div class="contact-info">
+                                        <h4><%= contact.name %></h4>
+                                        <p><%= contact.email %></p>
+                                        <span class="service-tag"><%= contact.service %></span>
+                                    </div>
+                                    <div class="contact-meta">
+                                        <span class="date"><%= new Date(contact.date).toLocaleDateString() %></span>
+                                        <span class="status status-<%= contact.status %>"><%= contact.status.replace('-', ' ') %></span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p class="no-data">No recent contacts</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Recent Projects -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Projects</h3>
+                        <a href="/admin/projects" class="view-all">View All</a>
+                    </div>
+                    <div class="card-content">
+                        <% if (data.recentProjects.length > 0) { %>
+                            <% data.recentProjects.forEach(project => { %>
+                                <div class="project-item">
+                                    <div class="project-info">
+                                        <h4><%= project.name %></h4>
+                                        <p><%= project.client %></p>
+                                    </div>
+                                    <div class="project-meta">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: <%= project.progress %>%"></div>
+                                        </div>
+                                        <span class="progress-text"><%= project.progress %>%</span>
+                                        <span class="status status-<%= project.status %>"><%= project.status.replace('-', ' ') %></span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p class="no-data">No recent projects</p>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .admin-body {
+            background: #f5f7fa;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 250px;
+            background: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header h3 {
+            color: white;
+            margin: 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-item i {
+            margin-right: 0.75rem;
+            width: 16px;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-header h1 {
+            color: var(--dark);
+            margin: 0;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--medium-gray);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-content h3 {
+            font-size: 2rem;
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .stat-content p {
+            margin: 0;
+            color: var(--medium-gray);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .view-all {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Contact Items */
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--dark);
+        }
+
+        .contact-info p {
+            margin: 0 0 0.5rem 0;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .service-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .contact-meta {
+            text-align: right;
+        }
+
+        .date {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+        }
+
+        .status-new {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-contacted {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-proposal-sent {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status-in-progress {
+            background: #e8f5e8;
+            color: #388e3c;
+        }
+
+        .status-completed {
+            background: #e0f2f1;
+            color: #00796b;
+        }
+
+        /* Project Items */
+        .project-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .project-item:last-child {
+            border-bottom: none;
+        }
+
+        .project-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--dark);
+        }
+
+        .project-info p {
+            margin: 0 0 0.75rem 0;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--medium-gray);
+            min-width: 40px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0;
+            }
+
+            .nav-item {
+                white-space: nowrap;
+                min-width: 120px;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        // Auto-refresh dashboard data every 30 seconds
+        setInterval(async () => {
+            try {
+                const response = await fetch('/admin/api/stats');
+                const stats = await response.json();
+                // Update stats if needed
+            } catch (error) {
+                console.error('Failed to refresh stats:', error);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="logo">
+        <a href="/"><img src="/images/logo1.png" alt="Robe Logo">ROBE</a>
+    </div>
+    <div class="nav-links">
+        <a href="/" class="<%= currentPage === 'home' ? 'active' : '' %>">Home</a>
+        <a href="/about" class="<%= currentPage === 'about' ? 'active' : '' %>">About</a>
+        <a href="/services" class="<%= currentPage === 'services' ? 'active' : '' %>">Services</a>
+        <a href="/portfolio" class="<%= currentPage === 'portfolio' ? 'active' : '' %>">Portfolio</a>
+        <a href="/testimonials" class="<%= currentPage === 'testimonials' ? 'active' : '' %>">Testimonials</a>
+        <a href="/contact" class="cta-button">Contact Us</a>
+    </div>
+    <div class="mobile-menu">
+        <i class="fas fa-bars"></i>
+    </div>
+</nav>

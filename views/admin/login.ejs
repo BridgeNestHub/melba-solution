@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body class="admin-body">
+    <div class="admin-login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="/images/logo1.png" alt="Robe Logo" class="login-logo">
+                <h1>Admin Login</h1>
+                <p>Access the Robe Digital Agency admin panel</p>
+            </div>
+
+            <% if (error) { %>
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <form class="login-form" method="POST" action="/admin/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p><a href="/">← Back to Website</a></p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .login-form {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-gray);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(47, 95, 218, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .login-footer {
+            padding: 1rem 2rem;
+            background: var(--off-white);
+            text-align: center;
+        }
+
+        .login-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</body>
+</html>
