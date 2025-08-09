@@ -6,7 +6,7 @@
         <!-- Admin Sidebar -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
-                <img src="/images/logo1.png" alt="Robe Logo">
+                <img src="/images/logo1.png" alt="MelbaSolution Logo">
                 <h3>Admin Panel</h3>
             </div>
             
@@ -15,9 +15,9 @@
                     <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
-                <a href="/admin/contacts" class="nav-item">
-                    <i class="fas fa-envelope"></i>
-                    Contacts
+                <a href="/admin/submissions" class="nav-item">
+                    <i class="fas fa-inbox"></i>
+                    Submissions
                 </a>
                 <a href="/admin/projects" class="nav-item">
                     <i class="fas fa-project-diagram"></i>
@@ -90,6 +90,26 @@
                         <p>Monthly Revenue</p>
                     </div>
                 </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.totalContacts %></h3>
+                        <p>Total Contacts</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3><%= data.stats.newsletterSubscribers %></h3>
+                        <p>Newsletter Subscribers</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Recent Activity -->
@@ -108,6 +128,7 @@
                                         <h4><%= contact.name %></h4>
                                         <p><%= contact.email %></p>
                                         <span class="service-tag"><%= contact.service %></span>
+                                        <span class="source-tag"><%= contact.source %></span>
                                     </div>
                                     <div class="contact-meta">
                                         <span class="date"><%= new Date(contact.date).toLocaleDateString() %></span>
@@ -146,6 +167,31 @@
                             <% }) %>
                         <% } else { %>
                             <p class="no-data">No recent projects</p>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Newsletter Subscriptions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3>Recent Newsletter Subscriptions</h3>
+                        <span class="view-all"><%= data.stats.newsletterSubscribers %> Total</span>
+                    </div>
+                    <div class="card-content">
+                        <% if (data.recentNewsletters && data.recentNewsletters.length > 0) { %>
+                            <% data.recentNewsletters.forEach(newsletter => { %>
+                                <div class="newsletter-item">
+                                    <div class="newsletter-info">
+                                        <i class="fas fa-envelope"></i>
+                                        <span><%= newsletter.email %></span>
+                                    </div>
+                                    <div class="newsletter-meta">
+                                        <span class="date"><%= new Date(newsletter.date).toLocaleDateString() %></span>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% } else { %>
+                            <p class="no-data">No recent subscriptions</p>
                         <% } %>
                     </div>
                 </div>
@@ -376,6 +422,43 @@
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .source-tag {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .newsletter-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .newsletter-item:last-child {
+            border-bottom: none;
+        }
+
+        .newsletter-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .newsletter-info i {
+            color: var(--primary-color);
+            width: 16px;
+        }
+
+        .newsletter-meta .date {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
         }
 
         .contact-meta {

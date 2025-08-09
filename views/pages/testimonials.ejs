@@ -21,7 +21,7 @@
                 <div class="testimonial-card featured">
                     <div class="quote">
                         <i class="fas fa-quote-left"></i>
-                        <p>Robe transformed our online presence completely. Our website traffic increased by 300% within 3 months, and we're now reaching customers globally that we never could before.</p>
+                        <p>MelbaSolution transformed our online presence completely. Our website traffic increased by 300% within 3 months, and we're now reaching customers globally that we never could before.</p>
                     </div>
                     <div class="client-info">
                         <img src="/images/client1.jpg" alt="Michael Johnson">
@@ -63,7 +63,7 @@
                 <div class="testimonial-card">
                     <div class="quote">
                         <i class="fas fa-quote-left"></i>
-                        <p>Professional, responsive, and results-driven. Robe helped us launch our e-commerce platform and we saw immediate results in sales and customer engagement.</p>
+                        <p>Professional, responsive, and results-driven. MelbaSolution helped us launch our e-commerce platform and we saw immediate results in sales and customer engagement.</p>
                     </div>
                     <div class="client-info">
                         <img src="/images/client1.jpg" alt="David Chen">
@@ -105,7 +105,7 @@
                 <div class="testimonial-card">
                     <div class="quote">
                         <i class="fas fa-quote-left"></i>
-                        <p>Working with Robe was a game-changer. They redesigned our website and implemented SEO strategies that boosted our organic traffic by 400%. Highly recommended!</p>
+                        <p>Working with MelbaSolution was a game-changer. They redesigned our website and implemented SEO strategies that boosted our organic traffic by 400%. Highly recommended!</p>
                     </div>
                     <div class="client-info">
                         <img src="/images/client1.jpg" alt="James Wilson">
@@ -233,7 +233,7 @@
                             </div>
                         </div>
                     </div>
-                    <p>"Our food delivery app needed a complete overhaul. Robe delivered beyond expectations with modern design and seamless UX. Orders increased by 250%."</p>
+                    <p>"Our food delivery app needed a complete overhaul. MelbaSolution delivered beyond expectations with modern design and seamless UX. Orders increased by 250%."</p>
                     <div class="result-badge">+250% Orders</div>
                 </div>
 
@@ -271,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <p>"From concept to launch, Robe guided us through every step. Their expertise in startup branding and web development is unmatched."</p>
+                    <p>"From concept to launch, MelbaSolution guided us through every step. Their expertise in startup branding and web development is unmatched."</p>
                     <div class="result-badge">Successful Launch</div>
                 </div>
 
@@ -328,7 +328,7 @@
                             </div>
                         </div>
                     </div>
-                    <p>"Our online learning platform needed a complete redesign. Robe created an intuitive, engaging experience that boosted student enrollment by 350%."</p>
+                    <p>"Our online learning platform needed a complete redesign. MelbaSolution created an intuitive, engaging experience that boosted student enrollment by 350%."</p>
                     <div class="result-badge">+350% Enrollment</div>
                 </div>
             </div>
@@ -352,11 +352,11 @@
                     <span class="trust-badge">Certified</span>
                 </div>
                 <div class="trust-item">
-                    <div class="trust-icon">
-                        <i class="fas fa-shield-check"></i>
+                    <div class="trust-icon google-partner">
+                        <img src="https://www.gstatic.com/partners/badge/images/2024/PartnerBadgeClickable.svg" alt="Google Partner" style="width: 60px; height: auto;">
                     </div>
-                    <h4>Google Certified</h4>
-                    <p>Premier Partner Status</p>
+                    <h4>Google Partner</h4>
+                    <p>Certified Premier Partner</p>
                     <span class="trust-badge">Verified</span>
                 </div>
                 <div class="trust-item">
@@ -391,6 +391,22 @@
                     <p>Always Available</p>
                     <span class="trust-badge">Responsive</span>
                 </div>
+                <div class="trust-item">
+                    <div class="trust-icon aws-partner">
+                        <img src="https://d1.awsstatic.com/partner-network/logo_apn_color.png" alt="AWS Partner" style="width: 50px; height: auto;">
+                    </div>
+                    <h4>AWS Partner</h4>
+                    <p>Cloud Solutions Expert</p>
+                    <span class="trust-badge">Certified</span>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <h4>Global Reach</h4>
+                    <p>Serving 25+ Countries</p>
+                    <span class="trust-badge">Worldwide</span>
+                </div>
             </div>
         </div>
     </section>
@@ -423,7 +439,7 @@
             <h2>Ready to Join Our Success Stories?</h2>
             <p>Let's discuss how we can help transform your business.</p>
             <div class="cta-buttons">
-                <a href="/contact" class="primary-btn">Start Your Transformation</a>
+                <a href="#" class="primary-btn" id="transformationBtn">Start Your Transformation</a>
                 <a href="/portfolio" class="secondary-btn">View Our Work</a>
             </div>
             <div class="cta-guarantee">
@@ -432,6 +448,186 @@
             </div>
         </div>
     </section>
+
+    <!-- Transformation Modal -->
+    <div id="transformationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Start Your Digital Transformation</h3>
+                <span class="close-modal" data-action="close-transformation">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="transformationForm" action="/transformation" method="POST">
+                    <input type="hidden" name="service" value="digital-transformation">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessName">Business Name *</label>
+                            <input type="text" id="businessName" name="company" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="industry">Industry *</label>
+                            <select id="industry" name="industry" required>
+                                <option value="">Select your industry</option>
+                                <option value="Technology">Technology</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="E-commerce">E-commerce</option>
+                                <option value="Education">Education</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Manufacturing">Manufacturing</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactName">Your Name *</label>
+                            <input type="text" id="contactName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address *</label>
+                            <input type="email" id="contactEmail" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="currentWebsite">Current Website</label>
+                            <input type="url" id="currentWebsite" name="website" placeholder="https://">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="businessGoals">What are your main business goals? *</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Increase Online Presence">
+                                <span>Increase Online Presence</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Generate More Leads">
+                                <span>Generate More Leads</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Expand to Global Markets">
+                                <span>Expand to Global Markets</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Improve Brand Recognition">
+                                <span>Improve Brand Recognition</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Increase Sales">
+                                <span>Increase Sales</span>
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="goals" value="Digital Marketing">
+                                <span>Digital Marketing</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transformationBudget">Investment Budget (Optional)</label>
+                            <select id="transformationBudget" name="budget">
+                                <option value="">Select budget range</option>
+                                <option value="Under $5,000">Under $5,000</option>
+                                <option value="$5,000 - $15,000">$5,000 - $15,000</option>
+                                <option value="$15,000 - $50,000">$15,000 - $50,000</option>
+                                <option value="$50,000+">$50,000+</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transformationTimeline">Desired Timeline (Optional)</label>
+                            <select id="transformationTimeline" name="timeline">
+                                <option value="">Select timeline</option>
+                                <option value="ASAP">ASAP</option>
+                                <option value="1-3 months">1-3 months</option>
+                                <option value="3-6 months">3-6 months</option>
+                                <option value="6+ months">6+ months</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transformationMessage">Tell us about your transformation vision *</label>
+                        <textarea id="transformationMessage" name="message" rows="4" placeholder="Describe your current challenges and what you hope to achieve through digital transformation... (minimum 10 characters)" required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="secondary-btn" data-action="close-transformation">Cancel</button>
+                        <button type="submit" class="primary-btn">
+                            <span class="btn-text"><i class="fas fa-rocket"></i> Start My Transformation</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+        <div class="message-overlay" id="messageOverlay">
+            <div class="success-message-modal" id="successMessage">
+                <div class="message-content">
+                    <div class="message-icon success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="message-text">
+                        <h3>Message Sent Successfully!</h3>
+                        <p><%= successMessage %></p>
+                        <div class="message-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>We'll respond within 24 hours</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>Check your email for confirmation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="close-btn" data-action="close-message">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Error Message Modal -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="message-overlay" id="messageOverlay">
+            <div class="error-message-modal" id="errorMessage">
+                <div class="message-content">
+                    <div class="message-icon error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="message-text">
+                        <h3>Please Fix the Following Issues</h3>
+                        <div class="error-list">
+                            <% errors.forEach(error => { %>
+                                <div class="error-item">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span><%= error.msg %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <button class="close-btn" data-action="close-message">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } %>
 
     <%- include('../partials/footer') %>
 
@@ -709,13 +905,13 @@
         .stat-item:hover {
             transform: translateY(-10px) scale(1.05);
             background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .stat-number {
             display: block;
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 1.2rem;
+            font-weight: 400;
             color: #ffd700;
             margin-bottom: 0.5rem;
             text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
@@ -888,5 +1084,402 @@
     </style>
 
     <script src="/js/main.js"></script>
+    <script>
+        // Transformation Modal Functionality - CSP Compliant
+        document.addEventListener('DOMContentLoaded', function() {
+            const transformationModal = document.getElementById('transformationModal');
+            const transformationBtn = document.getElementById('transformationBtn');
+            const transformationForm = document.getElementById('transformationForm');
+            
+            // Open modal when button is clicked
+            if (transformationBtn) {
+                transformationBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    transformationModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Focus first input for accessibility
+                    const firstInput = transformationModal.querySelector('input, select, textarea');
+                    if (firstInput) firstInput.focus();
+                });
+            }
+            
+            // Close modal function
+            function closeTransformationModal() {
+                transformationModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                if (transformationForm) {
+                    transformationForm.reset();
+                }
+            }
+            
+            // Close message function
+            function closeMessage() {
+                const overlay = document.getElementById('messageOverlay');
+                if (overlay) {
+                    overlay.classList.add('fade-out');
+                    setTimeout(() => {
+                        overlay.remove();
+                    }, 300);
+                }
+            }
+            
+            // Event listeners for close buttons
+            const closeButtons = document.querySelectorAll('[data-action="close-transformation"]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeTransformationModal);
+            });
+            
+            const messageCloseButtons = document.querySelectorAll('[data-action="close-message"]');
+            messageCloseButtons.forEach(button => {
+                button.addEventListener('click', closeMessage);
+            });
+            
+            // Close modal when clicking outside
+            if (transformationModal) {
+                transformationModal.addEventListener('click', function(event) {
+                    if (event.target === transformationModal) {
+                        closeTransformationModal();
+                    }
+                });
+            }
+            
+            // Close message overlay when clicking outside
+            const messageOverlay = document.getElementById('messageOverlay');
+            if (messageOverlay) {
+                messageOverlay.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('message-overlay')) {
+                        closeMessage();
+                    }
+                });
+            }
+            
+            // Close modals with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (transformationModal && transformationModal.style.display === 'block') {
+                        closeTransformationModal();
+                    }
+                    if (document.getElementById('messageOverlay')) {
+                        closeMessage();
+                    }
+                }
+            });
+            
+            // Form submission handling
+            if (transformationForm) {
+                transformationForm.addEventListener('submit', function(e) {
+                    // Collect checkbox values before submission
+                    const goals = Array.from(document.querySelectorAll('input[name="goals"]:checked'))
+                        .map(cb => cb.value).join(', ');
+                    
+                    // Add goals to message field
+                    const messageField = document.getElementById('transformationMessage');
+                    const currentMessage = messageField.value;
+                    
+                    if (goals) {
+                        messageField.value = currentMessage + '\n\nBusiness Goals: ' + goals;
+                    }
+                    
+                    // Add loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const btnText = submitBtn.querySelector('.btn-text');
+                    
+                    if (submitBtn && btnText) {
+                        submitBtn.classList.add('btn--loading');
+                        btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        submitBtn.disabled = true;
+                    }
+                    
+                    // Let the form submit naturally to the server
+                    // Don't prevent default - server will handle validation and response
+                });
+            }
+            
+            // Auto-hide success message and clean URL
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                // Clean URL by removing success query parameter
+                if (window.location.search.includes('success=')) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('success');
+                    window.history.replaceState({}, document.title, url.pathname);
+                }
+                
+                setTimeout(() => {
+                    closeMessage();
+                }, 8000);
+            }
+            
+            // Form validation helper
+            const messageField = document.getElementById('transformationMessage');
+            if (messageField) {
+                messageField.addEventListener('input', function() {
+                    const length = this.value.length;
+                    if (length > 0 && length < 10) {
+                        this.style.borderColor = '#EF4444';
+                    } else {
+                        this.style.borderColor = '';
+                    }
+                });
+            }
+            
+            // Checkbox validation
+            const checkboxGroup = document.querySelector('.checkbox-group');
+            if (checkboxGroup) {
+                const checkboxes = checkboxGroup.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const checkedBoxes = checkboxGroup.querySelectorAll('input[type="checkbox"]:checked');
+                        if (checkedBoxes.length === 0) {
+                            checkboxGroup.style.borderColor = '#EF4444';
+                        } else {
+                            checkboxGroup.style.borderColor = '';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-fast);
+        }
+        
+        .checkbox-item:hover {
+            background-color: var(--off-white);
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: var(--spacing-sm);
+            width: auto;
+        }
+        
+        .checkbox-item span {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Message Overlay Styles */
+        .message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .message-overlay.fade-out {
+            animation: fadeOut 0.3s ease-out;
+        }
+
+        .success-message-modal,
+        .error-message-modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 500px;
+            width: 90%;
+            margin: 0 20px;
+            animation: slideUp 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-message-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .error-message-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .message-content {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .message-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon {
+            color: #10B981;
+            background-color: #ECFDF5;
+            border: 3px solid #D1FAE5;
+        }
+
+        .error-icon {
+            color: #EF4444;
+            background-color: #FEF2F2;
+            border: 3px solid #FECACA;
+        }
+
+        .message-text h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            color: #1F2937;
+        }
+
+        .message-text p {
+            font-size: 1rem;
+            color: #6B7280;
+            margin: 0 0 20px 0;
+            line-height: 1.6;
+        }
+
+        .message-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .detail-item i {
+            color: #10B981;
+            width: 16px;
+            text-align: center;
+        }
+
+        .error-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .error-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #EF4444;
+            font-size: 0.95rem;
+            text-align: left;
+            background-color: #FEF2F2;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 3px solid #EF4444;
+        }
+
+        .error-item i {
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #9CA3AF;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background-color: #F3F4F6;
+            color: #374151;
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
 </body>
 </html>

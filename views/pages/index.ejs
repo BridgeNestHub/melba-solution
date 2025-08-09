@@ -79,7 +79,7 @@
             <div class="testimonial-card">
                 <div class="quote">
                     <i class="fas fa-quote-left"></i>
-                    <p>Robe transformed our online presence completely. Our website traffic increased by 300% within 3 months.</p>
+                    <p>MelbaSolution transformed our online presence completely. Our website traffic increased by 300% within 3 months.</p>
                 </div>
                 <div class="client-info">
                     <img src="/images/client1.jpg" alt="Michael Johnson">
@@ -147,7 +147,7 @@
         <div class="cta-content">
             <h2>Ready to Transform Your Business?</h2>
             <p>Let's discuss how we can help you achieve your digital goals.</p>
-            <a href="/contact" class="primary-btn">Get a Free Consultation</a>
+            <a href="#" class="primary-btn" id="consultationBtn">Get a Free Consultation</a>
         </div>
 
         <div class="cta-guarantee">
@@ -156,8 +156,492 @@
         </div>
     </section>
 
+    <!-- Consultation Modal -->
+    <div id="consultationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Get a Free Consultation</h3>
+                <span class="close-modal" data-action="close-consultation">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="consultationForm" action="/consultation" method="POST">
+                    <input type="hidden" name="service" value="consultation">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="consultationName">Your Name *</label>
+                            <input type="text" id="consultationName" name="name" value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="consultationEmail">Email Address *</label>
+                            <input type="email" id="consultationEmail" name="email" value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="consultationPhone">Phone Number</label>
+                            <input type="tel" id="consultationPhone" name="phone" value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="consultationCompany">Company Name</label>
+                            <input type="text" id="consultationCompany" name="company" value="<%= typeof formData !== 'undefined' ? formData.company || '' : '' %>">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="consultationMessage">Tell us about your project *</label>
+                        <textarea id="consultationMessage" name="message" rows="4" placeholder="Describe your business goals and what you'd like to achieve... (minimum 10 characters)" required><%= typeof formData !== 'undefined' ? formData.message || '' : '' %></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="secondary-btn" data-action="close-consultation">Cancel</button>
+                        <button type="submit" class="primary-btn">
+                            <span class="btn-text"><i class="fas fa-calendar-check"></i> Schedule Consultation</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+        <div class="message-overlay" id="messageOverlay">
+            <div class="success-message-modal" id="successMessage">
+                <div class="message-content">
+                    <div class="message-icon success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="message-text">
+                        <h3>Consultation Request Sent!</h3>
+                        <p><%= successMessage %></p>
+                        <div class="message-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>We'll respond within 24 hours</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>We'll schedule your free consultation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="close-btn" data-action="close-message">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Error Message Modal -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="message-overlay" id="messageOverlay">
+            <div class="error-message-modal" id="errorMessage">
+                <div class="message-content">
+                    <div class="message-icon error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="message-text">
+                        <h3>Please Fix the Following Issues</h3>
+                        <div class="error-list">
+                            <% errors.forEach(error => { %>
+                                <div class="error-item">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span><%= error.msg %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <button class="close-btn" data-action="close-message">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
     <%- include('../partials/footer') %>
 
     <script src="/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const consultationModal = document.getElementById('consultationModal');
+            const consultationBtn = document.getElementById('consultationBtn');
+            const consultationForm = document.getElementById('consultationForm');
+            
+            // Open modal when button is clicked
+            if (consultationBtn) {
+                consultationBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    consultationModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Focus first input for accessibility
+                    const firstInput = consultationModal.querySelector('input, textarea');
+                    if (firstInput) firstInput.focus();
+                });
+            }
+            
+            // Close modal function
+            function closeConsultationModal() {
+                consultationModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                if (consultationForm) {
+                    consultationForm.reset();
+                }
+            }
+            
+            // Close message function
+            function closeMessage() {
+                const overlay = document.getElementById('messageOverlay');
+                if (overlay) {
+                    overlay.classList.add('fade-out');
+                    setTimeout(() => {
+                        overlay.remove();
+                    }, 300);
+                }
+            }
+            
+            // Event listeners for close buttons
+            const closeButtons = document.querySelectorAll('[data-action="close-consultation"]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeConsultationModal);
+            });
+            
+            const messageCloseButtons = document.querySelectorAll('[data-action="close-message"]');
+            messageCloseButtons.forEach(button => {
+                button.addEventListener('click', closeMessage);
+            });
+            
+            // Close modal when clicking outside
+            if (consultationModal) {
+                consultationModal.addEventListener('click', function(event) {
+                    if (event.target === consultationModal) {
+                        closeConsultationModal();
+                    }
+                });
+            }
+            
+            // Close message overlay when clicking outside
+            const messageOverlay = document.getElementById('messageOverlay');
+            if (messageOverlay) {
+                messageOverlay.addEventListener('click', function(event) {
+                    if (event.target.classList.contains('message-overlay')) {
+                        closeMessage();
+                    }
+                });
+            }
+            
+            // Close modals with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (consultationModal && consultationModal.style.display === 'block') {
+                        closeConsultationModal();
+                    }
+                    if (document.getElementById('messageOverlay')) {
+                        closeMessage();
+                    }
+                }
+            });
+            
+            // Form submission handling
+            if (consultationForm) {
+                consultationForm.addEventListener('submit', function(e) {
+                    // Add loading state
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    const btnText = submitBtn.querySelector('.btn-text');
+                    
+                    if (submitBtn && btnText) {
+                        submitBtn.classList.add('btn--loading');
+                        btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                        submitBtn.disabled = true;
+                    }
+                    
+                    // Let the form submit naturally to the server
+                });
+            }
+            
+            // Auto-hide success message and clean URL
+            const successMessage = document.getElementById('successMessage');
+            if (successMessage) {
+                // Clean URL by removing success query parameter
+                if (window.location.search.includes('success=')) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('success');
+                    window.history.replaceState({}, document.title, url.pathname);
+                }
+                
+                setTimeout(() => {
+                    closeMessage();
+                }, 8000);
+            }
+            
+            // Show modal with errors if there are validation errors
+            <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                // Show the consultation modal with errors
+                consultationModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            <% } %>
+        });
+    </script>
+    
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.2s ease;
+        }
+
+        .close-modal:hover {
+            color: #374151;
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        /* Message Overlay Styles */
+        .message-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .message-overlay.fade-out {
+            animation: fadeOut 0.3s ease-out;
+        }
+
+        .success-message-modal,
+        .error-message-modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            max-width: 500px;
+            width: 90%;
+            margin: 0 20px;
+            animation: slideUp 0.3s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-message-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .error-message-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .message-content {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .message-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon {
+            color: #10B981;
+            background-color: #ECFDF5;
+            border: 3px solid #D1FAE5;
+        }
+
+        .error-icon {
+            color: #EF4444;
+            background-color: #FEF2F2;
+            border: 3px solid #FECACA;
+        }
+
+        .message-text h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 12px 0;
+            color: #1F2937;
+        }
+
+        .message-text p {
+            font-size: 1rem;
+            color: #6B7280;
+            margin: 0 0 20px 0;
+            line-height: 1.6;
+        }
+
+        .message-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .detail-item i {
+            color: #10B981;
+            width: 16px;
+            text-align: center;
+        }
+
+        .error-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .error-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #EF4444;
+            font-size: 0.95rem;
+            text-align: left;
+            background-color: #FEF2F2;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border-left: 3px solid #EF4444;
+        }
+
+        .error-item i {
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #9CA3AF;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background-color: #F3F4F6;
+            color: #374151;
+            transform: scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* Secondary button hover effect */
+        .secondary-btn:hover {
+            background-color: white !important;
+            color: var(--primary-color) !important;
+            border-color: white !important;
+        }
+    </style>
 </body>
 </html>

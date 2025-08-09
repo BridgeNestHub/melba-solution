@@ -256,8 +256,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 For support and questions:
-- **Email:** hello@robeglobal.com
-- **Phone:** +1 (555) 123-4567
+- **Email:** contact@melbasolution.com
+- **Phone:** +1 (206) 240-9455
 - **Website:** [www.robeglobal.com](http://localhost:3000)
 
 ## 🔄 Version History

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
+const dataStore = require('../utils/dataStore');
 
 // Admin authentication middleware
 const requireAuth = (req, res, next) => {
@@ -19,7 +20,7 @@ router.get('/login', (req, res) => {
   }
   
   res.render('admin/login', {
-    title: 'Admin Login - Robe Digital Agency',
+    title: 'Admin Login - MelbaSolution Digital Agency',
     currentPage: 'admin-login',
     error: null
   });
@@ -34,7 +35,7 @@ router.post('/login', [
   
   if (!errors.isEmpty()) {
     return res.render('admin/login', {
-      title: 'Admin Login - Robe Digital Agency',
+      title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',
       error: 'Please fill in all fields'
     });
@@ -49,7 +50,7 @@ router.post('/login', [
     res.redirect('/admin/dashboard');
   } else {
     res.render('admin/login', {
-      title: 'Admin Login - Robe Digital Agency',
+      title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',
       error: 'Invalid username or password'
     });
@@ -58,134 +59,110 @@ router.post('/login', [
 
 // Admin dashboard
 router.get('/dashboard', requireAuth, (req, res) => {
-  // In a real application, you would fetch this data from a database
+  const stats = dataStore.getStats();
   const dashboardData = {
     stats: {
-      totalProjects: 156,
-      activeProjects: 23,
-      totalClients: 89,
-      monthlyRevenue: '$45,230'
+      totalProjects: stats.totalProjects,
+      activeProjects: stats.activeProjects,
+      totalClients: Math.floor(stats.totalContacts * 0.6), // Estimate clients from contacts
+      monthlyRevenue: '$45,230', // This would come from a payment system
+      totalContacts: stats.totalContacts,
+      newsletterSubscribers: stats.newsletterSubscribers,
+      conversionRate: stats.totalContacts > 0 ? Math.round((stats.totalContacts * 0.125) * 100) / 100 + '%' : '0%',
+      avgProjectValue: '$18,500' // This would be calculated from actual project data
     },
-    recentContacts: [
-      {
-        id: 1,
-        name: 'John Smith',
-        email: 'john@example.com',
-        service: 'Web Development',
-        date: '2025-01-15',
-        status: 'new'
-      },
-      {
-        id: 2,
-        name: 'Sarah Johnson',
-        email: 'sarah@company.com',
-        service: 'Branding',
-        date: '2025-01-14',
-        status: 'contacted'
-      },
-      {
-        id: 3,
-        name: 'Mike Wilson',
-        email: 'mike@business.com',
-        service: 'Digital Marketing',
-        date: '2025-01-13',
-        status: 'proposal-sent'
-      }
-    ],
-    recentProjects: [
-      {
-        id: 1,
-        name: 'TechCorp Website Redesign',
-        client: 'TechCorp Inc.',
-        status: 'in-progress',
-        progress: 75,
-        deadline: '2025-02-15'
-      },
-      {
-        id: 2,
-        name: 'GreenLife Branding',
-        client: 'GreenLife Co.',
-        status: 'completed',
-        progress: 100,
-        deadline: '2025-01-10'
-      }
-    ]
+    recentContacts: dataStore.getRecentContacts(3),
+    recentProjects: dataStore.getProjects().slice(0, 3),
+    recentNewsletters: dataStore.getRecentNewsletters(3)
   };
 
   res.render('admin/dashboard', {
-    title: 'Admin Dashboard - Robe Digital Agency',
+    title: 'Admin Dashboard - MelbaSolution Digital Agency',
     currentPage: 'admin-dashboard',
     adminUser: req.session.adminUser,
     data: dashboardData
   });
 });
 
-// Admin contacts management
-router.get('/contacts', requireAuth, (req, res) => {
-  // In a real application, fetch from database with pagination
-  const contacts = [
-    {
-      id: 1,
-      name: 'John Smith',
-      email: 'john@example.com',
-      phone: '+1 (555) 123-4567',
-      company: 'Smith Enterprises',
-      service: 'Web Development',
-      budget: '15k-50k',
-      message: 'Looking for a complete website redesign...',
-      date: '2025-01-15',
-      status: 'new'
-    },
-    {
-      id: 2,
-      name: 'Sarah Johnson',
-      email: 'sarah@company.com',
-      phone: '+1 (555) 987-6543',
-      company: 'Johnson & Associates',
-      service: 'Branding',
-      budget: '5k-15k',
-      message: 'Need help with brand identity...',
-      date: '2025-01-14',
-      status: 'contacted'
-    }
-  ];
+// Admin submissions management - Overview
+router.get('/submissions', requireAuth, (req, res) => {
+  const contacts = dataStore.getContacts();
+  const newsletters = dataStore.getNewsletters();
+  const stats = dataStore.getStats();
 
-  res.render('admin/contacts', {
-    title: 'Contact Management - Admin',
-    currentPage: 'admin-contacts',
+  res.render('admin/submissions', {
+    title: 'Submissions Management - Admin',
+    currentPage: 'admin-submissions',
+    adminUser: req.session.adminUser,
+    contacts: contacts,
+    newsletters: newsletters,
+    stats: stats
+  });
+});
+
+// Contact Form submissions
+router.get('/submissions/contacts', requireAuth, (req, res) => {
+  const contacts = dataStore.getContacts().filter(c => c.source === 'Contact Form');
+
+  res.render('admin/submissions-contacts', {
+    title: 'Contact Form Submissions - Admin',
+    currentPage: 'admin-submissions',
     adminUser: req.session.adminUser,
     contacts: contacts
   });
 });
 
+// Package Quote submissions
+router.get('/submissions/packages', requireAuth, (req, res) => {
+  const packages = dataStore.getContacts().filter(c => c.source === 'Package Quote');
+
+  res.render('admin/submissions-packages', {
+    title: 'Package Quote Submissions - Admin',
+    currentPage: 'admin-submissions',
+    adminUser: req.session.adminUser,
+    packages: packages
+  });
+});
+
+// Consultation submissions
+router.get('/submissions/consultations', requireAuth, (req, res) => {
+  const consultations = dataStore.getContacts().filter(c => c.source === 'Consultation Request');
+
+  res.render('admin/submissions-consultations', {
+    title: 'Consultation Submissions - Admin',
+    currentPage: 'admin-submissions',
+    adminUser: req.session.adminUser,
+    consultations: consultations
+  });
+});
+
+// Transformation submissions
+router.get('/submissions/transformations', requireAuth, (req, res) => {
+  const transformations = dataStore.getContacts().filter(c => c.source === 'Transformation Request');
+
+  res.render('admin/submissions-transformations', {
+    title: 'Transformation Submissions - Admin',
+    currentPage: 'admin-submissions',
+    adminUser: req.session.adminUser,
+    transformations: transformations
+  });
+});
+
+// Newsletter submissions
+router.get('/submissions/newsletters', requireAuth, (req, res) => {
+  const newsletters = dataStore.getNewsletters();
+
+  res.render('admin/submissions-newsletters', {
+    title: 'Newsletter Subscriptions - Admin',
+    currentPage: 'admin-submissions',
+    adminUser: req.session.adminUser,
+    newsletters: newsletters
+  });
+});
+
 // Admin projects management
 router.get('/projects', requireAuth, (req, res) => {
-  const projects = [
-    {
-      id: 1,
-      name: 'TechCorp Website Redesign',
-      client: 'TechCorp Inc.',
-      clientEmail: 'contact@techcorp.com',
-      status: 'in-progress',
-      progress: 75,
-      startDate: '2024-12-01',
-      deadline: '2025-02-15',
-      budget: '$25,000',
-      description: 'Complete website redesign with modern UI/UX'
-    },
-    {
-      id: 2,
-      name: 'GreenLife Branding',
-      client: 'GreenLife Co.',
-      clientEmail: 'info@greenlife.com',
-      status: 'completed',
-      progress: 100,
-      startDate: '2024-11-15',
-      deadline: '2025-01-10',
-      budget: '$12,000',
-      description: 'Brand identity design and marketing materials'
-    }
-  ];
+  const projects = dataStore.getProjects();
 
   res.render('admin/projects', {
     title: 'Project Management - Admin',
@@ -261,31 +238,41 @@ router.post('/logout', (req, res) => {
 
 // API endpoints for admin
 router.get('/api/stats', requireAuth, (req, res) => {
-  // Return dashboard statistics
+  const stats = dataStore.getStats();
   res.json({
-    totalProjects: 156,
-    activeProjects: 23,
-    totalClients: 89,
+    totalProjects: stats.totalProjects,
+    activeProjects: stats.activeProjects,
+    totalClients: Math.floor(stats.totalContacts * 0.6),
     monthlyRevenue: 45230,
-    conversionRate: 12.5,
+    totalContacts: stats.totalContacts,
+    newsletterSubscribers: stats.newsletterSubscribers,
+    conversionRate: stats.totalContacts > 0 ? (stats.totalContacts * 0.125) : 0,
     avgProjectValue: 18500
   });
 });
 
-router.put('/api/contact/:id/status', requireAuth, (req, res) => {
+router.put('/api/submission/:id/status', requireAuth, (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   
-  // In production, update database
-  res.json({ success: true, message: 'Contact status updated' });
+  const updatedContact = dataStore.updateContactStatus(id, status);
+  if (updatedContact) {
+    res.json({ success: true, message: 'Submission status updated' });
+  } else {
+    res.status(404).json({ success: false, message: 'Submission not found' });
+  }
 });
 
 router.put('/api/project/:id/progress', requireAuth, (req, res) => {
   const { id } = req.params;
-  const { progress } = req.body;
+  const { progress, status } = req.body;
   
-  // In production, update database
-  res.json({ success: true, message: 'Project progress updated' });
+  const updatedProject = dataStore.updateProjectProgress(id, progress, status);
+  if (updatedProject) {
+    res.json({ success: true, message: 'Project progress updated' });
+  } else {
+    res.status(404).json({ success: false, message: 'Project not found' });
+  }
 });
 
 module.exports = router;

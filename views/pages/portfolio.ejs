@@ -96,7 +96,7 @@
                                 <span>Lead Generation</span>
                             </div>
                         </div>
-                        <a href="#" class="read-case">Read Full Case Study →</a>
+                        <a href="#" class="read-case" data-case="techcorp-case">Read Full Case Study →</a>
                     </div>
                 </div>
 
@@ -117,15 +117,394 @@
                                 <span>Customer Retention</span>
                             </div>
                         </div>
-                        <a href="#" class="read-case">Read Full Case Study →</a>
+                        <a href="#" class="read-case" data-case="greenlife-case">Read Full Case Study →</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="projectTitle"></h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="projectContent">
+                <!-- Project content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Study Modal -->
+    <div id="caseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="caseTitle"></h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="caseContent">
+                <!-- Case study content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <%- include('../partials/footer') %>
 
     <script src="/js/main.js"></script>
+    <script>
+        // Project and Case Study Modal Functionality
+        const projectModal = document.getElementById('projectModal');
+        const caseModal = document.getElementById('caseModal');
+        const closeBtns = document.querySelectorAll('.close-modal');
+        
+        // Project data
+        const projectData = {
+            techcorp: {
+                title: 'TechCorp Website - Complete Digital Transformation',
+                content: `
+                    <div class="project-details">
+                        <img src="/images/project1.jpg" alt="TechCorp Website" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>Project Overview</h4>
+                        <p>TechCorp needed a modern, responsive website that would establish their credibility in the technology sector and generate more qualified leads.</p>
+                        
+                        <h4>Technologies Used</h4>
+                        <ul>
+                            <li>React.js for dynamic user interface</li>
+                            <li>Node.js backend with Express</li>
+                            <li>MongoDB for content management</li>
+                            <li>AWS hosting for scalability</li>
+                        </ul>
+                        
+                        <h4>Key Features</h4>
+                        <ul>
+                            <li>Responsive design for all devices</li>
+                            <li>Custom CMS for easy content updates</li>
+                            <li>SEO optimization for better search rankings</li>
+                            <li>Contact forms with lead tracking</li>
+                            <li>Performance optimization for fast loading</li>
+                        </ul>
+                        
+                        <h4>Results Achieved</h4>
+                        <div class="results-grid">
+                            <div class="result-box">
+                                <span class="result-number">300%</span>
+                                <span>Increase in organic traffic</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">150%</span>
+                                <span>More qualified leads</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">95%</span>
+                                <span>Page speed score</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            greenlife: {
+                title: 'GreenLife Branding - Sustainable Brand Identity',
+                content: `
+                    <div class="project-details">
+                        <img src="/images/project2.jpg" alt="GreenLife Branding" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>Project Overview</h4>
+                        <p>GreenLife required a complete brand identity that would communicate their commitment to sustainability and appeal to environmentally conscious consumers.</p>
+                        
+                        <h4>Services Provided</h4>
+                        <ul>
+                            <li>Logo design and brand identity</li>
+                            <li>Color palette and typography selection</li>
+                            <li>Marketing materials design</li>
+                            <li>Brand guidelines documentation</li>
+                        </ul>
+                        
+                        <h4>Design Elements</h4>
+                        <ul>
+                            <li>Eco-friendly color scheme</li>
+                            <li>Modern, clean typography</li>
+                            <li>Sustainable packaging design</li>
+                            <li>Digital marketing templates</li>
+                            <li>Social media brand assets</li>
+                        </ul>
+                        
+                        <h4>Impact</h4>
+                        <div class="results-grid">
+                            <div class="result-box">
+                                <span class="result-number">200%</span>
+                                <span>Brand recognition increase</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">85%</span>
+                                <span>Customer retention rate</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">40%</span>
+                                <span>Sales growth</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            fashion: {
+                title: 'Fashion E-commerce - Online Store Development',
+                content: `
+                    <div class="project-details">
+                        <img src="/images/case1.jpg" alt="Fashion E-commerce" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>Project Overview</h4>
+                        <p>A fashion retailer needed a custom e-commerce platform to sell their products online and compete in the digital marketplace.</p>
+                        
+                        <h4>E-commerce Features</h4>
+                        <ul>
+                            <li>Custom shopping cart and checkout</li>
+                            <li>Payment gateway integration</li>
+                            <li>Inventory management system</li>
+                            <li>Order tracking and notifications</li>
+                        </ul>
+                        
+                        <h4>Technical Implementation</h4>
+                        <ul>
+                            <li>WooCommerce with custom themes</li>
+                            <li>Stripe and PayPal integration</li>
+                            <li>Mobile-first responsive design</li>
+                            <li>Advanced product filtering</li>
+                            <li>Customer account management</li>
+                        </ul>
+                        
+                        <h4>Business Results</h4>
+                        <div class="results-grid">
+                            <div class="result-box">
+                                <span class="result-number">250%</span>
+                                <span>Online sales increase</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">60%</span>
+                                <span>Mobile conversion rate</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">180%</span>
+                                <span>Customer base growth</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            marketing: {
+                title: 'Digital Marketing Campaign - Multi-Channel Strategy',
+                content: `
+                    <div class="project-details">
+                        <img src="/images/case2.jpg" alt="Marketing Campaign" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                        <h4>Campaign Overview</h4>
+                        <p>A comprehensive digital marketing campaign designed to increase brand awareness and drive conversions across multiple channels.</p>
+                        
+                        <h4>Marketing Channels</h4>
+                        <ul>
+                            <li>Google Ads and Facebook advertising</li>
+                            <li>Content marketing and SEO</li>
+                            <li>Email marketing campaigns</li>
+                            <li>Social media management</li>
+                        </ul>
+                        
+                        <h4>Strategy Implementation</h4>
+                        <ul>
+                            <li>Target audience research and segmentation</li>
+                            <li>Creative content development</li>
+                            <li>A/B testing for optimization</li>
+                            <li>Performance tracking and analytics</li>
+                            <li>Conversion rate optimization</li>
+                        </ul>
+                        
+                        <h4>Campaign Results</h4>
+                        <div class="results-grid">
+                            <div class="result-box">
+                                <span class="result-number">400%</span>
+                                <span>ROI improvement</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">220%</span>
+                                <span>Lead generation increase</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-number">75%</span>
+                                <span>Cost per acquisition reduction</span>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        };
+        
+        // Case study data
+        const caseData = {
+            'techcorp-case': {
+                title: 'TechCorp Digital Transformation - Complete Case Study',
+                content: `
+                    <div class="case-study-details">
+                        <h4>The Challenge</h4>
+                        <p>TechCorp was struggling with an outdated website that didn't reflect their innovative technology solutions. Their online presence was hurting their ability to compete for enterprise clients.</p>
+                        
+                        <h4>Our Approach</h4>
+                        <p>We conducted a comprehensive audit of their digital presence and developed a strategy that included:</p>
+                        <ul>
+                            <li>Complete website redesign with modern UX/UI</li>
+                            <li>Technical SEO optimization</li>
+                            <li>Content strategy development</li>
+                            <li>Lead generation system implementation</li>
+                        </ul>
+                        
+                        <h4>Implementation Timeline</h4>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <strong>Week 1-2:</strong> Discovery and strategy development
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Week 3-6:</strong> Design and development phase
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Week 7-8:</strong> Testing and optimization
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Week 9:</strong> Launch and monitoring
+                            </div>
+                        </div>
+                        
+                        <h4>Measurable Results</h4>
+                        <div class="results-detailed">
+                            <div class="result-detail">
+                                <h5>Traffic Growth</h5>
+                                <p>Organic traffic increased by 300% within 6 months, with significant improvements in search rankings for target keywords.</p>
+                            </div>
+                            <div class="result-detail">
+                                <h5>Lead Quality</h5>
+                                <p>Lead generation improved by 150%, with better qualification and higher conversion rates to sales.</p>
+                            </div>
+                            <div class="result-detail">
+                                <h5>User Experience</h5>
+                                <p>Bounce rate decreased by 45% and average session duration increased by 120%.</p>
+                            </div>
+                        </div>
+                        
+                        <h4>Client Testimonial</h4>
+                        <blockquote>
+                            "MelbaSolution transformed our digital presence completely. The new website not only looks amazing but has become our most effective sales tool. We've seen a dramatic increase in qualified leads and our conversion rates have never been better."
+                            <cite>- John Smith, CEO of TechCorp</cite>
+                        </blockquote>
+                    </div>
+                `
+            },
+            'greenlife-case': {
+                title: 'GreenLife Brand Launch - Complete Case Study',
+                content: `
+                    <div class="case-study-details">
+                        <h4>The Challenge</h4>
+                        <p>GreenLife was launching as a new sustainable products company and needed to establish a strong brand identity that would resonate with environmentally conscious consumers in a competitive market.</p>
+                        
+                        <h4>Our Strategy</h4>
+                        <p>We developed a comprehensive branding strategy that included:</p>
+                        <ul>
+                            <li>Market research and competitor analysis</li>
+                            <li>Brand positioning and messaging</li>
+                            <li>Visual identity development</li>
+                            <li>Marketing materials creation</li>
+                        </ul>
+                        
+                        <h4>Brand Development Process</h4>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <strong>Phase 1:</strong> Research and discovery
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Phase 2:</strong> Concept development and testing
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Phase 3:</strong> Final design and brand guidelines
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Phase 4:</strong> Implementation and launch
+                            </div>
+                        </div>
+                        
+                        <h4>Brand Impact</h4>
+                        <div class="results-detailed">
+                            <div class="result-detail">
+                                <h5>Brand Recognition</h5>
+                                <p>Achieved 200% increase in brand recognition within the first year of launch.</p>
+                            </div>
+                            <div class="result-detail">
+                                <h5>Customer Loyalty</h5>
+                                <p>85% customer retention rate, significantly higher than industry average.</p>
+                            </div>
+                            <div class="result-detail">
+                                <h5>Market Position</h5>
+                                <p>Successfully positioned as a premium sustainable brand, commanding 25% higher prices than competitors.</p>
+                            </div>
+                        </div>
+                        
+                        <h4>Client Feedback</h4>
+                        <blockquote>
+                            "The team at MelbaSolution didn't just create a logo - they created our entire brand identity. The sustainable, modern design perfectly captures our values and has helped us stand out in a crowded marketplace."
+                            <cite>- Sarah Johnson, Founder of GreenLife</cite>
+                        </blockquote>
+                    </div>
+                `
+            }
+        };
+        
+        // Event listeners for project links
+        document.querySelectorAll('.view-project').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const projectId = this.getAttribute('data-project');
+                const project = projectData[projectId];
+                
+                if (project) {
+                    document.getElementById('projectTitle').textContent = project.title;
+                    document.getElementById('projectContent').innerHTML = project.content;
+                    projectModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+        
+        // Event listeners for case study links
+        document.querySelectorAll('.read-case').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const caseId = this.getAttribute('data-case');
+                const caseStudy = caseData[caseId];
+                
+                if (caseStudy) {
+                    document.getElementById('caseTitle').textContent = caseStudy.title;
+                    document.getElementById('caseContent').innerHTML = caseStudy.content;
+                    caseModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+        
+        // Close modal functionality
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal);
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === projectModal) {
+                closeModal(projectModal);
+            }
+            if (event.target === caseModal) {
+                closeModal(caseModal);
+            }
+        });
+    </script>
 </body>
 </html>

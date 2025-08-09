@@ -1,0 +1,27 @@
+<aside class="admin-sidebar">
+    <div class="sidebar-header">
+        <img src="/images/logo1.png" alt="MelbaSolution Logo">
+        <h3>Admin Panel</h3>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="/admin/dashboard" class="nav-item <%= currentPage === 'admin-dashboard' ? 'active' : '' %>">
+            <i class="fas fa-tachometer-alt"></i>Dashboard
+        </a>
+        <a href="/admin/submissions" class="nav-item <%= currentPage === 'admin-submissions' ? 'active' : '' %>">
+            <i class="fas fa-inbox"></i>Submissions
+        </a>
+        <a href="/admin/projects" class="nav-item <%= currentPage === 'admin-projects' ? 'active' : '' %>">
+            <i class="fas fa-project-diagram"></i>Projects
+        </a>
+        <a href="/admin/settings" class="nav-item <%= currentPage === 'admin-settings' ? 'active' : '' %>">
+            <i class="fas fa-cog"></i>Settings
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <form method="POST" action="/admin/logout">
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>Logout
+            </button>
+        </form>
+    </div>
+</aside>

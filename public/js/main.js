@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced Chat System for main.js
 const chatResponses = {
     greetings: [
-        "Hello! Welcome to Robe Digital Agency. How can we assist you today?",
+        "Hello! Welcome to MelbaSolution Digital Agency. How can we assist you today?",
         "Hi there! Thanks for reaching out. What brings you to our site today?",
         "Welcome! We're here to help with your digital needs. What can we do for you?"
     ],
@@ -333,7 +333,7 @@ function getRandomResponse(type) {
 
     //         // Contact information request
     //         if (message.includes('contact') || message.includes('email') || message.includes('phone') || message.includes('call')) {
-    //             return "You can reach our team at contact@example.com or call us at (555) 123-4567. When would be the best time for us to contact you?";
+    //             return "You can reach our team at contact@example.com or call us at (206) 240-9455. When would be the best time for us to contact you?";
     //         }
 
     //         // Questions about experience/portfolio
@@ -393,25 +393,22 @@ function getRandomResponse(type) {
     // Form Submission
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+        contactForm.addEventListener('submit', function(e) {
+            // Don't prevent default - let the form submit normally to the server
+            // The server will handle validation and redirect back with success/error messages
             
-            // Simple validation
-            const name = contactForm.querySelector('#name').value.trim();
-            const email = contactForm.querySelector('#email').value.trim();
-            const message = contactForm.querySelector('#message').value.trim();
+            // Just add loading state to the submit button
+            const submitBtn = this.querySelector('.submit-btn');
+            const btnText = submitBtn.querySelector('.btn-text');
             
-            if (!name || !email || !message) {
-                alert('Please fill in all required fields.');
-                return;
+            if (submitBtn && btnText) {
+                submitBtn.classList.add('btn--loading');
+                btnText.textContent = 'Sending...';
+                submitBtn.disabled = true;
             }
             
-            // In a real implementation, you would send this data to your server
-            console.log('Form submitted:', { name, email, message });
-            
-            // Show success message
-            alert('Thank you for your message. We will get back to you soon!');
-            contactForm.reset();
+            // Let the form submit normally - don't prevent default
+            // The server will handle the rest and show our modal on the response page
         });
     }
 

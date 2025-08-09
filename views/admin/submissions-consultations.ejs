@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body class="admin-body">
+    <div class="admin-container">
+        <%- include('../partials/admin-sidebar', { currentPage: 'admin-submissions' }) %>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <div class="header-left">
+                    <a href="/admin/submissions" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <h1>Consultation Submissions</h1>
+                </div>
+                <div class="admin-user">
+                    <i class="fas fa-user-circle"></i>Welcome, <%= adminUser %>
+                </div>
+            </header>
+
+            <div class="submissions-container">
+                <div class="submissions-header">
+                    <div class="submissions-stats">
+                        <div class="stat-item">
+                            <span class="stat-number"><%= consultations.length %></span>
+                            <span class="stat-label">Total Consultations</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number"><%= consultations.filter(c => c.status === 'new').length %></span>
+                            <span class="stat-label">New</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number"><%= consultations.filter(c => c.status === 'contacted').length %></span>
+                            <span class="stat-label">Contacted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submissions-grid">
+                    <% consultations.forEach(consultation => { %>
+                        <div class="submission-card">
+                            <div class="submission-header">
+                                <div class="submission-avatar">
+                                    <i class="fas fa-handshake"></i>
+                                </div>
+                                <div class="submission-basic">
+                                    <h3><%= consultation.name %></h3>
+                                    <p class="submission-email"><%= consultation.email %></p>
+                                </div>
+                                <div class="submission-status">
+                                    <span class="status status-<%= consultation.status %>"><%= consultation.status.replace('-', ' ') %></span>
+                                </div>
+                            </div>
+                            
+                            <div class="submission-details">
+                                <div class="detail-row">
+                                    <i class="fas fa-phone"></i>
+                                    <span><%= consultation.phone || 'Not provided' %></span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-building"></i>
+                                    <span><%= consultation.company || 'Not provided' %></span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-cogs"></i>
+                                    <span><%= consultation.service || 'Consultation' %></span>
+                                </div>
+                                <div class="detail-row">
+                                    <i class="fas fa-calendar"></i>
+                                    <span><%= new Date(consultation.date).toLocaleDateString() %></span>
+                                </div>
+                            </div>
+                            
+                            <div class="submission-message">
+                                <h4>Consultation Request:</h4>
+                                <p><%= consultation.message %></p>
+                            </div>
+                            
+                            <div class="submission-actions">
+                                <button class="btn-primary" onclick="updateStatus('<%= consultation.id %>', 'contacted')">
+                                    <i class="fas fa-phone"></i> Schedule Call
+                                </button>
+                                <button class="btn-secondary" onclick="updateStatus('<%= consultation.id %>', 'proposal-sent')">
+                                    <i class="fas fa-calendar-plus"></i> Book Meeting
+                                </button>
+                                <button class="btn-success" onclick="updateStatus('<%= consultation.id %>', 'completed')">
+                                    <i class="fas fa-check"></i> Complete
+                                </button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <%- include('../partials/admin-styles') %>
+    <script src="/js/admin.js"></script>
+</body>
+</html>
