@@ -86,7 +86,7 @@ router.get('/contact', (req, res) => {
   });
 });
 
-// Package quote form submission
+// Package quote form submission - UPDATED FOR MONGODB
 router.post('/package-quote', [
   body('firstName').trim().isLength({ min: 2 }).withMessage('First name must be at least 2 characters long'),
   body('lastName').trim().isLength({ min: 2 }).withMessage('Last name must be at least 2 characters long'),
@@ -113,8 +113,8 @@ router.post('/package-quote', [
   }
 
   try {
-    // Store in data store
-    dataStore.addContact({
+    // Store in MongoDB - UPDATED TO USE AWAIT
+    await dataStore.addContact({
       name: `${req.body.firstName} ${req.body.lastName}`,
       email: req.body.email,
       phone: req.body.phone,
@@ -148,7 +148,7 @@ router.post('/package-quote', [
   }
 });
 
-// Transformation form submission
+// Transformation form submission - UPDATED FOR MONGODB
 router.post('/transformation', [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
@@ -174,8 +174,8 @@ router.post('/transformation', [
   }
 
   try {
-    // Store in data store
-    dataStore.addContact({
+    // Store in MongoDB - UPDATED TO USE AWAIT
+    await dataStore.addContact({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -209,7 +209,7 @@ router.post('/transformation', [
   }
 });
 
-// Contact form submission
+// Contact form submission - UPDATED FOR MONGODB
 router.post('/contact', [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
@@ -233,8 +233,8 @@ router.post('/contact', [
   }
 
   try {
-    // Store in data store
-    dataStore.addContact({
+    // Store in MongoDB - UPDATED TO USE AWAIT
+    await dataStore.addContact({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -263,9 +263,7 @@ router.post('/contact', [
   }
 });
 
-
-
-// Consultation form submission
+// Consultation form submission - UPDATED FOR MONGODB
 router.post('/consultation', [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
@@ -286,8 +284,8 @@ router.post('/consultation', [
   }
 
   try {
-    // Store in data store
-    dataStore.addContact({
+    // Store in MongoDB - UPDATED TO USE AWAIT
+    await dataStore.addContact({
       name: req.body.name,
       email: req.body.email,
       phone: req.body.phone,
@@ -316,7 +314,7 @@ router.post('/consultation', [
   }
 });
 
-// Newsletter subscription
+// Newsletter subscription - UPDATED FOR MONGODB
 router.post('/newsletter', [
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address')
 ], async (req, res) => {
@@ -327,8 +325,8 @@ router.post('/newsletter', [
   }
 
   try {
-    // Store in data store
-    dataStore.addNewsletter(req.body.email);
+    // Store in MongoDB - UPDATED TO USE AWAIT
+    await dataStore.addNewsletter(req.body.email);
     
     // Add to newsletter (implement your newsletter service here)
     await emailService.addToNewsletter(req.body.email);

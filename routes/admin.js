@@ -1,4 +1,4 @@
-//admin.js
+//admin.js - Updated for MongoDB
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -106,119 +106,199 @@ router.post('/login', loginLimiter, [
   }
 });
 
-// Admin dashboard
-router.get('/dashboard', requireAuth, (req, res) => {
-  const stats = dataStore.getStats();
-  const dashboardData = {
-    stats: {
-      totalProjects: stats.totalProjects,
-      activeProjects: stats.activeProjects,
-      totalClients: Math.floor(stats.totalContacts * 0.6), // Estimate clients from contacts
-      monthlyRevenue: '$45,230', // This would come from a payment system
-      totalContacts: stats.totalContacts,
-      newsletterSubscribers: stats.newsletterSubscribers,
-      conversionRate: stats.totalContacts > 0 ? Math.round((stats.totalContacts * 0.125) * 100) / 100 + '%' : '0%',
-      avgProjectValue: '$18,500' // This would be calculated from actual project data
-    },
-    recentContacts: dataStore.getRecentContacts(3),
-    recentProjects: dataStore.getProjects().slice(0, 3),
-    recentNewsletters: dataStore.getRecentNewsletters(3)
-  };
+// Admin dashboard - UPDATED FOR ASYNC
+router.get('/dashboard', requireAuth, async (req, res) => {
+  try {
+    const stats = await dataStore.getStats();
+    const recentContacts = await dataStore.getRecentContacts(3);
+    const allProjects = await dataStore.getProjects();
+    const recentNewsletters = await dataStore.getRecentNewsletters(3);
+    
+    const dashboardData = {
+      stats: {
+        totalProjects: stats.totalProjects,
+        activeProjects: stats.activeProjects,
+        totalClients: Math.floor(stats.totalContacts * 0.6), // Estimate clients from contacts
+        monthlyRevenue: '$45,230', // This would come from a payment system
+        totalContacts: stats.totalContacts,
+        newsletterSubscribers: stats.newsletterSubscribers,
+        conversionRate: stats.totalContacts > 0 ? Math.round((stats.totalContacts * 0.125) * 100) / 100 + '%' : '0%',
+        avgProjectValue: '$18,500' // This would be calculated from actual project data
+      },
+      recentContacts: recentContacts,
+      recentProjects: allProjects.slice(0, 3),
+      recentNewsletters: recentNewsletters
+    };
 
-  res.render('admin/dashboard', {
-    title: 'Admin Dashboard - MelbaSolution Digital Agency',
-    currentPage: 'admin-dashboard',
-    adminUser: req.session.adminUser,
-    data: dashboardData
-  });
+    res.render('admin/dashboard', {
+      title: 'Admin Dashboard - MelbaSolution Digital Agency',
+      currentPage: 'admin-dashboard',
+      adminUser: req.session.adminUser,
+      data: dashboardData
+    });
+  } catch (error) {
+    console.error('Dashboard error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load dashboard data'
+    });
+  }
 });
 
-// Admin submissions management - Overview
-router.get('/submissions', requireAuth, (req, res) => {
-  const contacts = dataStore.getContacts();
-  const newsletters = dataStore.getNewsletters();
-  const stats = dataStore.getStats();
+// Admin submissions management - Overview - UPDATED FOR ASYNC
+router.get('/submissions', requireAuth, async (req, res) => {
+  try {
+    const contacts = await dataStore.getContacts();
+    const newsletters = await dataStore.getNewsletters();
+    const stats = await dataStore.getStats();
 
-  res.render('admin/submissions', {
-    title: 'Submissions Management - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    contacts: contacts,
-    newsletters: newsletters,
-    stats: stats
-  });
+    res.render('admin/submissions', {
+      title: 'Submissions Management - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      contacts: contacts,
+      newsletters: newsletters,
+      stats: stats
+    });
+  } catch (error) {
+    console.error('Submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load submissions data'
+    });
+  }
 });
 
-// Contact Form submissions
-router.get('/submissions/contacts', requireAuth, (req, res) => {
-  const contacts = dataStore.getContacts().filter(c => c.source === 'Contact Form');
+// Contact Form submissions - UPDATED FOR ASYNC
+router.get('/submissions/contacts', requireAuth, async (req, res) => {
+  try {
+    const allContacts = await dataStore.getContacts();
+    const contacts = allContacts.filter(c => c.source === 'Contact Form');
 
-  res.render('admin/submissions-contacts', {
-    title: 'Contact Form Submissions - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    contacts: contacts
-  });
+    res.render('admin/submissions-contacts', {
+      title: 'Contact Form Submissions - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      contacts: contacts
+    });
+  } catch (error) {
+    console.error('Contact submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load contact submissions'
+    });
+  }
 });
 
-// Package Quote submissions
-router.get('/submissions/packages', requireAuth, (req, res) => {
-  const packages = dataStore.getContacts().filter(c => c.source === 'Package Quote');
+// Package Quote submissions - UPDATED FOR ASYNC
+router.get('/submissions/packages', requireAuth, async (req, res) => {
+  try {
+    const allContacts = await dataStore.getContacts();
+    const packages = allContacts.filter(c => c.source === 'Package Quote');
 
-  res.render('admin/submissions-packages', {
-    title: 'Package Quote Submissions - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    packages: packages
-  });
+    res.render('admin/submissions-packages', {
+      title: 'Package Quote Submissions - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      packages: packages
+    });
+  } catch (error) {
+    console.error('Package submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load package submissions'
+    });
+  }
 });
 
-// Consultation submissions
-router.get('/submissions/consultations', requireAuth, (req, res) => {
-  const consultations = dataStore.getContacts().filter(c => c.source === 'Consultation Request');
+// Consultation submissions - UPDATED FOR ASYNC
+router.get('/submissions/consultations', requireAuth, async (req, res) => {
+  try {
+    const allContacts = await dataStore.getContacts();
+    const consultations = allContacts.filter(c => c.source === 'Consultation Request');
 
-  res.render('admin/submissions-consultations', {
-    title: 'Consultation Submissions - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    consultations: consultations
-  });
+    res.render('admin/submissions-consultations', {
+      title: 'Consultation Submissions - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      consultations: consultations
+    });
+  } catch (error) {
+    console.error('Consultation submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load consultation submissions'
+    });
+  }
 });
 
-// Transformation submissions
-router.get('/submissions/transformations', requireAuth, (req, res) => {
-  const transformations = dataStore.getContacts().filter(c => c.source === 'Transformation Request');
+// Transformation submissions - UPDATED FOR ASYNC
+router.get('/submissions/transformations', requireAuth, async (req, res) => {
+  try {
+    const allContacts = await dataStore.getContacts();
+    const transformations = allContacts.filter(c => c.source === 'Transformation Request');
 
-  res.render('admin/submissions-transformations', {
-    title: 'Transformation Submissions - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    transformations: transformations
-  });
+    res.render('admin/submissions-transformations', {
+      title: 'Transformation Submissions - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      transformations: transformations
+    });
+  } catch (error) {
+    console.error('Transformation submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load transformation submissions'
+    });
+  }
 });
 
-// Newsletter submissions
-router.get('/submissions/newsletters', requireAuth, (req, res) => {
-  const newsletters = dataStore.getNewsletters();
+// Newsletter submissions - UPDATED FOR ASYNC
+router.get('/submissions/newsletters', requireAuth, async (req, res) => {
+  try {
+    const newsletters = await dataStore.getNewsletters();
 
-  res.render('admin/submissions-newsletters', {
-    title: 'Newsletter Subscriptions - Admin',
-    currentPage: 'admin-submissions',
-    adminUser: req.session.adminUser,
-    newsletters: newsletters
-  });
+    res.render('admin/submissions-newsletters', {
+      title: 'Newsletter Subscriptions - Admin',
+      currentPage: 'admin-submissions',
+      adminUser: req.session.adminUser,
+      newsletters: newsletters
+    });
+  } catch (error) {
+    console.error('Newsletter submissions error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load newsletter submissions'
+    });
+  }
 });
 
-// Admin projects management
-router.get('/projects', requireAuth, (req, res) => {
-  const projects = dataStore.getProjects();
+// Admin projects management - UPDATED FOR ASYNC
+router.get('/projects', requireAuth, async (req, res) => {
+  try {
+    const projects = await dataStore.getProjects();
 
-  res.render('admin/projects', {
-    title: 'Project Management - Admin',
-    currentPage: 'admin-projects',
-    adminUser: req.session.adminUser,
-    projects: projects
-  });
+    res.render('admin/projects', {
+      title: 'Project Management - Admin',
+      currentPage: 'admin-projects',
+      adminUser: req.session.adminUser,
+      projects: projects
+    });
+  } catch (error) {
+    console.error('Projects error:', error);
+    res.status(500).render('pages/error', {
+      title: '500 - Server Error',
+      currentPage: 'error',
+      error: 'Failed to load projects'
+    });
+  }
 });
 
 // Admin settings
@@ -285,42 +365,57 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// API endpoints for admin
-router.get('/api/stats', requireAuth, (req, res) => {
-  const stats = dataStore.getStats();
-  res.json({
-    totalProjects: stats.totalProjects,
-    activeProjects: stats.activeProjects,
-    totalClients: Math.floor(stats.totalContacts * 0.6),
-    monthlyRevenue: 45230,
-    totalContacts: stats.totalContacts,
-    newsletterSubscribers: stats.newsletterSubscribers,
-    conversionRate: stats.totalContacts > 0 ? (stats.totalContacts * 0.125) : 0,
-    avgProjectValue: 18500
-  });
-});
-
-router.put('/api/submission/:id/status', requireAuth, (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  
-  const updatedContact = dataStore.updateContactStatus(id, status);
-  if (updatedContact) {
-    res.json({ success: true, message: 'Submission status updated' });
-  } else {
-    res.status(404).json({ success: false, message: 'Submission not found' });
+// API endpoints for admin - UPDATED FOR ASYNC
+router.get('/api/stats', requireAuth, async (req, res) => {
+  try {
+    const stats = await dataStore.getStats();
+    res.json({
+      totalProjects: stats.totalProjects,
+      activeProjects: stats.activeProjects,
+      totalClients: Math.floor(stats.totalContacts * 0.6),
+      monthlyRevenue: 45230,
+      totalContacts: stats.totalContacts,
+      newsletterSubscribers: stats.newsletterSubscribers,
+      conversionRate: stats.totalContacts > 0 ? (stats.totalContacts * 0.125) : 0,
+      avgProjectValue: 18500
+    });
+  } catch (error) {
+    console.error('Stats API error:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
   }
 });
 
-router.put('/api/project/:id/progress', requireAuth, (req, res) => {
-  const { id } = req.params;
-  const { progress, status } = req.body;
-  
-  const updatedProject = dataStore.updateProjectProgress(id, progress, status);
-  if (updatedProject) {
-    res.json({ success: true, message: 'Project progress updated' });
-  } else {
-    res.status(404).json({ success: false, message: 'Project not found' });
+router.put('/api/submission/:id/status', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const updatedContact = await dataStore.updateContactStatus(id, status);
+    if (updatedContact) {
+      res.json({ success: true, message: 'Submission status updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Submission not found' });
+    }
+  } catch (error) {
+    console.error('Update submission error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update submission' });
+  }
+});
+
+router.put('/api/project/:id/progress', requireAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { progress, status } = req.body;
+    
+    const updatedProject = await dataStore.updateProjectProgress(id, progress, status);
+    if (updatedProject) {
+      res.json({ success: true, message: 'Project progress updated' });
+    } else {
+      res.status(404).json({ success: false, message: 'Project not found' });
+    }
+  } catch (error) {
+    console.error('Update project error:', error);
+    res.status(500).json({ success: false, message: 'Failed to update project' });
   }
 });
 

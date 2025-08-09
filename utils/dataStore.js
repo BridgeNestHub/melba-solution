@@ -1,102 +1,221 @@
-// Simple in-memory data store (in production, use a proper database)
-class DataStore {
-  constructor() {
-    this.contacts = [];
-    this.projects = [];
-    this.newsletters = [];
-    this.nextContactId = 1;
-    this.nextProjectId = 1;
-    this.nextNewsletterId = 1;
-  }
+// MongoDB-based data store
+const mongoose = require('mongoose');
 
-  // Contact methods
-  addContact(contactData) {
-    const contact = {
-      id: this.nextContactId++,
-      ...contactData,
-      date: new Date().toISOString(),
-      status: 'new'
-    };
-    this.contacts.unshift(contact); // Add to beginning
-    return contact;
-  }
-
-  getContacts() {
-    return this.contacts;
-  }
-
-  getRecentContacts(limit = 5) {
-    return this.contacts.slice(0, limit);
-  }
-
-  updateContactStatus(id, status) {
-    const contact = this.contacts.find(c => c.id === parseInt(id));
-    if (contact) {
-      contact.status = status;
-      return contact;
+// Connect to MongoDB
+const connectDB = async () => {
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(process.env.MONGODB_URI);
+      console.log('✅ MongoDB Connected Successfully');
     }
-    return null;
+  } catch (error) {
+    console.error('❌ MongoDB Connection Error:', error);
+    process.exit(1);
+  }
+};
+
+// Initialize connection
+connectDB();
+
+// Contact Schema
+const contactSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: String,
+  company: String,
+  message: String,
+  source: { type: String, default: 'Contact Form' },
+  status: { type: String, default: 'new', enum: ['new', 'contacted', 'in-progress', 'completed'] },
+  date: { type: Date, default: Date.now }
+}, { timestamps: true });
+
+// Newsletter Schema
+const newsletterSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  status: { type: String, default: 'active', enum: ['active', 'unsubscribed'] },
+  date: { type: Date, default: Date.now }
+}, { timestamps: true });
+
+// Project Schema
+const projectSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  client: String,
+  description: String,
+  status: { type: String, default: 'planning', enum: ['planning', 'in-progress', 'completed', 'on-hold'] },
+  progress: { type: Number, default: 0, min: 0, max: 100 },
+  startDate: { type: Date, default: Date.now },
+  endDate: Date,
+  budget: Number,
+  category: String
+}, { timestamps: true });
+
+// Create models
+const Contact = mongoose.model('Contact', contactSchema);
+const Newsletter = mongoose.model('Newsletter', newsletterSchema);
+const Project = mongoose.model('Project', projectSchema);
+
+// DataStore class with MongoDB operations
+class DataStore {
+  // Contact methods
+  async addContact(contactData) {
+    try {
+      const contact = new Contact(contactData);
+      await contact.save();
+      return contact.toObject();
+    } catch (error) {
+      console.error('Error adding contact:', error);
+      throw error;
+    }
+  }
+
+  async getContacts() {
+    try {
+      return await Contact.find().sort({ createdAt: -1 }).lean();
+    } catch (error) {
+      console.error('Error getting contacts:', error);
+      return [];
+    }
+  }
+
+  async getRecentContacts(limit = 5) {
+    try {
+      return await Contact.find().sort({ createdAt: -1 }).limit(limit).lean();
+    } catch (error) {
+      console.error('Error getting recent contacts:', error);
+      return [];
+    }
+  }
+
+  async updateContactStatus(id, status) {
+    try {
+      const contact = await Contact.findByIdAndUpdate(
+        id, 
+        { status }, 
+        { new: true }
+      );
+      return contact ? contact.toObject() : null;
+    } catch (error) {
+      console.error('Error updating contact status:', error);
+      return null;
+    }
   }
 
   // Newsletter methods
-  addNewsletter(email) {
-    const newsletter = {
-      id: this.nextNewsletterId++,
-      email,
-      date: new Date().toISOString(),
-      status: 'active'
-    };
-    this.newsletters.unshift(newsletter);
-    return newsletter;
-  }
-
-  getNewsletters() {
-    return this.newsletters;
-  }
-
-  getRecentNewsletters(limit = 5) {
-    return this.newsletters.slice(0, limit);
-  }
-
-  // Project methods (for future use)
-  addProject(projectData) {
-    const project = {
-      id: this.nextProjectId++,
-      ...projectData,
-      startDate: new Date().toISOString(),
-      status: 'planning',
-      progress: 0
-    };
-    this.projects.unshift(project);
-    return project;
-  }
-
-  getProjects() {
-    return this.projects;
-  }
-
-  updateProjectProgress(id, progress, status) {
-    const project = this.projects.find(p => p.id === parseInt(id));
-    if (project) {
-      project.progress = progress;
-      if (status) project.status = status;
-      project.lastUpdate = new Date().toISOString();
-      return project;
+  async addNewsletter(email) {
+    try {
+      // Check if email already exists
+      const existing = await Newsletter.findOne({ email });
+      if (existing) {
+        return existing.toObject();
+      }
+      
+      const newsletter = new Newsletter({ email });
+      await newsletter.save();
+      return newsletter.toObject();
+    } catch (error) {
+      console.error('Error adding newsletter:', error);
+      throw error;
     }
-    return null;
+  }
+
+  async getNewsletters() {
+    try {
+      return await Newsletter.find().sort({ createdAt: -1 }).lean();
+    } catch (error) {
+      console.error('Error getting newsletters:', error);
+      return [];
+    }
+  }
+
+  async getRecentNewsletters(limit = 5) {
+    try {
+      return await Newsletter.find().sort({ createdAt: -1 }).limit(limit).lean();
+    } catch (error) {
+      console.error('Error getting recent newsletters:', error);
+      return [];
+    }
+  }
+
+  // Project methods
+  async addProject(projectData) {
+    try {
+      const project = new Project(projectData);
+      await project.save();
+      return project.toObject();
+    } catch (error) {
+      console.error('Error adding project:', error);
+      throw error;
+    }
+  }
+
+  async getProjects() {
+    try {
+      return await Project.find().sort({ createdAt: -1 }).lean();
+    } catch (error) {
+      console.error('Error getting projects:', error);
+      return [];
+    }
+  }
+
+  async updateProjectProgress(id, progress, status) {
+    try {
+      const updateData = { progress };
+      if (status) updateData.status = status;
+      
+      const project = await Project.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true }
+      );
+      return project ? project.toObject() : null;
+    } catch (error) {
+      console.error('Error updating project progress:', error);
+      return null;
+    }
   }
 
   // Stats methods
-  getStats() {
-    return {
-      totalContacts: this.contacts.length,
-      newContacts: this.contacts.filter(c => c.status === 'new').length,
-      contactedContacts: this.contacts.filter(c => c.status === 'contacted').length,
-      newsletterSubscribers: this.newsletters.length,
-      totalProjects: this.projects.length,
-      activeProjects: this.projects.filter(p => p.status === 'in-progress').length,
-      completedProjects: this.projects.filter(p => p.status === 'completed').length
-    };
+  async getStats() {
+    try {
+      const [
+        totalContacts,
+        newContacts,
+        contactedContacts,
+        newsletterSubscribers,
+        totalProjects,
+        activeProjects,
+        completedProjects
+      ] = await Promise.all([
+        Contact.countDocuments(),
+        Contact.countDocuments({ status: 'new' }),
+        Contact.countDocuments({ status: 'contacted' }),
+        Newsletter.countDocuments({ status: 'active' }),
+        Project.countDocuments(),
+        Project.countDocuments({ status: 'in-progress' }),
+        Project.countDocuments({ status: 'completed' })
+      ]);
+
+      return {
+        totalContacts,
+        newContacts,
+        contactedContacts,
+        newsletterSubscribers,
+        totalProjects,
+        activeProjects,
+        completedProjects
+      };
+    } catch (error) {
+      console.error('Error getting stats:', error);
+      return {
+        totalContacts: 0,
+        newContacts: 0,
+        contactedContacts: 0,
+        newsletterSubscribers: 0,
+        totalProjects: 0,
+        activeProjects: 0,
+        completedProjects: 0
+      };
+    }
   }
 }
 
