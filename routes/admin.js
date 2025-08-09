@@ -27,13 +27,23 @@ router.get('/login', (req, res) => {
 });
 
 // Admin login POST
+// Replace your existing login POST route with this debug version:
+
 router.post('/login', [
   body('username').trim().notEmpty().withMessage('Username is required'),
   body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
+  console.log('=== LOGIN DEBUG ===');
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('Session ID:', req.sessionID);
+  console.log('Session before login:', req.session);
+  console.log('Admin Username from ENV:', process.env.ADMIN_USERNAME);
+  console.log('Admin Password exists:', !!process.env.ADMIN_PASSWORD);
+  
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
     return res.render('admin/login', {
       title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',
@@ -42,13 +52,37 @@ router.post('/login', [
   }
 
   const { username, password } = req.body;
+  console.log('Submitted username:', username);
+  console.log('Password length:', password?.length);
   
-  // Simple authentication (in production, use database with hashed passwords)
-  if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+  // Simple authentication
+  const isValidUsername = username === process.env.ADMIN_USERNAME;
+  const isValidPassword = password === process.env.ADMIN_PASSWORD;
+  
+  console.log('Username valid:', isValidUsername);
+  console.log('Password valid:', isValidPassword);
+  
+  if (isValidUsername && isValidPassword) {
+    console.log('Authentication successful, setting session...');
     req.session.isAdmin = true;
     req.session.adminUser = username;
-    res.redirect('/admin/dashboard');
+    
+    // Force session save before redirect
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        return res.render('admin/login', {
+          title: 'Admin Login - MelbaSolution Digital Agency',
+          currentPage: 'admin-login',
+          error: 'Session error occurred'
+        });
+      }
+      console.log('Session saved, redirecting...');
+      console.log('Session after save:', req.session);
+      res.redirect('/admin/dashboard');
+    });
   } else {
+    console.log('Authentication failed');
     res.render('admin/login', {
       title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',

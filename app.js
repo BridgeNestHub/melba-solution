@@ -41,11 +41,12 @@ app.use(bodyParser.json());
 
 // Session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'robe-digital-agency-secret-key',
+  secret: process.env.SESSION_SECRET || 'MelbaSolution-digital-agency-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false,
+    httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
@@ -73,7 +74,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Robe Digital Agency server running on port ${PORT}`);
+  console.log(`🚀 MelbaSolution Digital Agency server running on port ${PORT}`);
   console.log(`📱 Visit: http://localhost:${PORT}`);
 });
 
