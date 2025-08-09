@@ -1,8 +1,21 @@
+//admin.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const dataStore = require('../utils/dataStore');
+
+// Rate limiting for login attempts
+const rateLimit = require('express-rate-limit');
+
+// Create rate limiter for login attempts
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: 'Too many login attempts, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // Admin authentication middleware
 const requireAuth = (req, res, next) => {
@@ -26,24 +39,14 @@ router.get('/login', (req, res) => {
   });
 });
 
-// Admin login POST
-// Replace your existing login POST route with this debug version:
-
-router.post('/login', [
+// Admin login POST with rate limiting
+router.post('/login', loginLimiter, [
   body('username').trim().notEmpty().withMessage('Username is required'),
   body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
-  console.log('=== LOGIN DEBUG ===');
-  console.log('Environment:', process.env.NODE_ENV);
-  console.log('Session ID:', req.sessionID);
-  console.log('Session before login:', req.session);
-  console.log('Admin Username from ENV:', process.env.ADMIN_USERNAME);
-  console.log('Admin Password exists:', !!process.env.ADMIN_PASSWORD);
-  
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    console.log('Validation errors:', errors.array());
     return res.render('admin/login', {
       title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',
@@ -52,41 +55,53 @@ router.post('/login', [
   }
 
   const { username, password } = req.body;
-  console.log('Submitted username:', username);
-  console.log('Password length:', password?.length);
   
-  // Simple authentication
-  const isValidUsername = username === process.env.ADMIN_USERNAME;
-  const isValidPassword = password === process.env.ADMIN_PASSWORD;
-  
-  console.log('Username valid:', isValidUsername);
-  console.log('Password valid:', isValidPassword);
-  
-  if (isValidUsername && isValidPassword) {
-    console.log('Authentication successful, setting session...');
-    req.session.isAdmin = true;
-    req.session.adminUser = username;
-    
-    // Force session save before redirect
-    req.session.save((err) => {
-      if (err) {
-        console.error('Session save error:', err);
-        return res.render('admin/login', {
-          title: 'Admin Login - MelbaSolution Digital Agency',
-          currentPage: 'admin-login',
-          error: 'Session error occurred'
+  try {
+    // Verify credentials
+    if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+      // Regenerate session ID to prevent session fixation attacks
+      req.session.regenerate((err) => {
+        if (err) {
+          console.error('Session regeneration error:', err);
+          return res.render('admin/login', {
+            title: 'Admin Login - MelbaSolution Digital Agency',
+            currentPage: 'admin-login',
+            error: 'Login failed. Please try again.'
+          });
+        }
+        
+        req.session.isAdmin = true;
+        req.session.adminUser = username;
+        req.session.loginTime = new Date();
+        
+        // Save session before redirect
+        req.session.save((err) => {
+          if (err) {
+            console.error('Session save error:', err);
+            return res.render('admin/login', {
+              title: 'Admin Login - MelbaSolution Digital Agency',
+              currentPage: 'admin-login',
+              error: 'Login failed. Please try again.'
+            });
+          }
+          res.redirect('/admin/dashboard');
         });
-      }
-      console.log('Session saved, redirecting...');
-      console.log('Session after save:', req.session);
-      res.redirect('/admin/dashboard');
-    });
-  } else {
-    console.log('Authentication failed');
+      });
+    } else {
+      // Add small delay to prevent timing attacks
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      res.render('admin/login', {
+        title: 'Admin Login - MelbaSolution Digital Agency',
+        currentPage: 'admin-login',
+        error: 'Invalid username or password'
+      });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
     res.render('admin/login', {
       title: 'Admin Login - MelbaSolution Digital Agency',
       currentPage: 'admin-login',
-      error: 'Invalid username or password'
+      error: 'An error occurred. Please try again.'
     });
   }
 });

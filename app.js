@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 const indexRoutes = require('./routes/index');
 const adminRoutes = require('./routes/admin');
 
+// Trust proxy - CRITICAL for Railway and other cloud platforms
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -39,15 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Session middleware
+// PRODUCTION-READY Session Configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'MelbaSolution-digital-agency-secret-key',
+  secret: process.env.SESSION_SECRET || 'robe-digital-agency-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }
+    secure: process.env.NODE_ENV === 'production', // Enable secure cookies in production
+    httpOnly: true, // Prevent XSS attacks
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
+  },
+  name: 'melba.sid' // Custom session name (security through obscurity)
 }));
 
 // Routes
@@ -73,8 +79,10 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 MelbaSolution Digital Agency server running on port ${PORT}`);
+  console.log(`🚀 Robe Digital Agency server running on port ${PORT}`);
   console.log(`📱 Visit: http://localhost:${PORT}`);
+  console.log(`🔒 Secure cookies: ${process.env.NODE_ENV === 'production'}`);
+  console.log(`🛡️  Trust proxy: enabled`);
 });
 
 module.exports = app;
