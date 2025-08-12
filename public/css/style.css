@@ -672,6 +672,9 @@
     color: var(--white);
     padding: var(--spacing-xxl) var(--container-padding);
     overflow: hidden;
+    
+    /* Fallback background color */
+    background-color: #1a2332;
   
     /* Background layers: dark gradient overlay + photo */
     background-image:
@@ -727,18 +730,33 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    
+    /* Fallback background color */
+    background-color: #1a2332;
   }
 
   .services-hero {
-    background-image: url('/images/portfolio.jpg');
+    background-image: 
+      linear-gradient(135deg, rgba(20, 40, 60, 0.7), rgba(10, 25, 45, 0.85)),
+      url('/images/portfolio.jpg');
   }
   
   .portfolio-hero {
-    background-image: url('/images/portfolio.jpg');
+    background-image: 
+      linear-gradient(135deg, rgba(20, 40, 60, 0.7), rgba(10, 25, 45, 0.85)),
+      url('/images/portfolio.jpg');
   }
   
   .contact-hero {
-    background-image: url('/images/contact.jpg');
+    background-image: 
+      linear-gradient(135deg, rgba(20, 40, 60, 0.7), rgba(10, 25, 45, 0.85)),
+      url('/images/contact.jpg');
+  }
+  
+  .testimonials-hero {
+    background-image: 
+      linear-gradient(135deg, rgba(20, 40, 60, 0.7), rgba(10, 25, 45, 0.85)),
+      url('/images/testimonials.jpg');
   }
   
   .hero::before,
