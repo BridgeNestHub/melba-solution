@@ -5,9 +5,9 @@ const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: process.env.EMAIL_PORT || 587,
   secure: false,
-  auth: process.env.EMAIL_USER && process.env.EMAIL_PASS ? {
+  auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    pass: process.env.EMAIL_PASSWORD
   } : undefined
 });
 
@@ -153,7 +153,7 @@ const sendContactForm = async (formData) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
       await transporter.sendMail(mailOptions);
       await transporter.sendMail(clientMailOptions);
       console.log('Contact form emails sent successfully');
@@ -246,7 +246,7 @@ const addToNewsletter = async (email) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
       await transporter.sendMail(adminNotification);
       await transporter.sendMail(welcomeEmail);
       console.log('Newsletter emails sent successfully');
@@ -401,7 +401,7 @@ const sendPackageQuote = async (formData) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
       await transporter.sendMail(mailOptions);
       await transporter.sendMail(clientMailOptions);
       console.log('Package quote emails sent successfully');
@@ -568,7 +568,7 @@ const sendTransformationForm = async (formData) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
       await transporter.sendMail(mailOptions);
       await transporter.sendMail(clientMailOptions);
       console.log('Transformation form emails sent successfully');

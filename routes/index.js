@@ -152,12 +152,12 @@ router.post('/package-quote', [
 router.post('/transformation', [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
-  body('phone').optional().isMobilePhone().withMessage('Please enter a valid phone number'),
+  body('phone').optional({ checkFalsy: true }).isMobilePhone().withMessage('Please enter a valid phone number'),
   body('company').trim().isLength({ min: 2 }).withMessage('Business name must be at least 2 characters long'),
   body('industry').isIn(['Technology', 'Healthcare', 'E-commerce', 'Education', 'Finance', 'Real Estate', 'Manufacturing', 'Other']).withMessage('Please select a valid industry'),
-  body('goals').optional().trim(),
-  body('budget').optional().isIn(['Under $2,000', '$2,000 - $4,000', '$4,000 - $6,000', '$6,000+']).withMessage('Please select a valid budget range'),
-  body('timeline').optional().isIn(['ASAP', '1-3 months', '3-6 months', '6+ months']).withMessage('Please select a valid timeline'),
+  body('goals').optional({ checkFalsy: true }).trim(),
+  body('budget').optional({ checkFalsy: true }).isIn(['Under $2,000', '$2,000 - $4,000', '$4,000 - $6,000', '$6,000+']).withMessage('Please select a valid budget range'),
+  body('timeline').optional({ checkFalsy: true }).isIn(['ASAP', '1-3 months', '3-6 months', '6+ months']).withMessage('Please select a valid timeline'),
   body('message').trim().isLength({ min: 10 }).withMessage('Transformation vision must be at least 10 characters long')
 ], async (req, res) => {
   const errors = validationResult(req);
@@ -169,7 +169,8 @@ router.post('/transformation', [
       currentPage: 'testimonials',
       metaDescription: 'Read what our clients say about their experience working with MelbaSolutionDigital Agency and their business transformation results.',
       errors: errors.array(),
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 
@@ -204,7 +205,8 @@ router.post('/transformation', [
       currentPage: 'testimonials',
       metaDescription: 'Read what our clients say about their experience working with MelbaSolutionDigital Agency and their business transformation results.',
       errors: [{ msg: 'Sorry, there was an error sending your request. Please try again.' }],
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 });
@@ -213,12 +215,12 @@ router.post('/transformation', [
 router.post('/contact', [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
-  body('phone').optional().isMobilePhone().withMessage('Please enter a valid phone number'),
-  body('company').optional().trim(),
+  body('phone').optional({ checkFalsy: true }).isMobilePhone().withMessage('Please enter a valid phone number'),
+  body('company').optional({ checkFalsy: true }).trim(),
   body('service').isIn(['web-development', 'branding', 'digital-marketing', 'ecommerce', 'consultation']).withMessage('Please select a valid service'),
-  body('budget').optional().isIn(['under-5k', '5k-15k', '15k-50k', 'over-50k']).withMessage('Please select a valid budget range'),
+  body('budget').optional({ checkFalsy: true }).isIn(['under-5k', '5k-15k', '15k-50k', 'over-50k']).withMessage('Please select a valid budget range'),
   body('message').trim().isLength({ min: 10 }).withMessage('Message must be at least 10 characters long'),
-  body('timeline').optional().isIn(['asap', '1-3-months', '3-6-months', 'flexible']).withMessage('Please select a valid timeline')
+  body('timeline').optional({ checkFalsy: true }).isIn(['asap', '1-3-months', '3-6-months', 'flexible']).withMessage('Please select a valid timeline')
 ], async (req, res) => {
   const errors = validationResult(req);
   
@@ -228,7 +230,8 @@ router.post('/contact', [
       currentPage: 'contact',
       metaDescription: 'Get in touch with MelbaSolutionDigital Agency. Let\'s discuss how we can help transform your business digitally.',
       errors: errors.array(),
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 
@@ -258,7 +261,8 @@ router.post('/contact', [
       currentPage: 'contact',
       metaDescription: 'Get in touch with MelbaSolutionDigital Agency. Let\'s discuss how we can help transform your business digitally.',
       errors: [{ msg: 'Sorry, there was an error sending your message. Please try again.' }],
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 });
@@ -279,7 +283,8 @@ router.post('/consultation', [
       currentPage: 'home',
       metaDescription: 'MelbaSolutionDigital Agency - We help local businesses transform into global brands through comprehensive digital solutions including web development, branding, and digital marketing.',
       errors: errors.array(),
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 
@@ -309,7 +314,8 @@ router.post('/consultation', [
       currentPage: 'home',
       metaDescription: 'MelbaSolutionDigital Agency - We help local businesses transform into global brands through comprehensive digital solutions including web development, branding, and digital marketing.',
       errors: [{ msg: 'Sorry, there was an error sending your request. Please try again.' }],
-      formData: req.body
+      formData: req.body,
+      successMessage: null
     });
   }
 });

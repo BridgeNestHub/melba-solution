@@ -463,20 +463,20 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="businessName">Business Name *</label>
-                            <input type="text" id="businessName" name="company" required>
+                            <input type="text" id="businessName" name="company" value="<%= typeof formData !== 'undefined' ? formData.company || '' : '' %>" required>
                         </div>
                         <div class="form-group">
                             <label for="industry">Industry *</label>
                             <select id="industry" name="industry" required>
                                 <option value="">Select your industry</option>
-                                <option value="Technology">Technology</option>
-                                <option value="Healthcare">Healthcare</option>
-                                <option value="E-commerce">E-commerce</option>
-                                <option value="Education">Education</option>
-                                <option value="Finance">Finance</option>
-                                <option value="Real Estate">Real Estate</option>
-                                <option value="Manufacturing">Manufacturing</option>
-                                <option value="Other">Other</option>
+                                <option value="Technology" <%= typeof formData !== 'undefined' && formData.industry === 'Technology' ? 'selected' : '' %>>Technology</option>
+                                <option value="Healthcare" <%= typeof formData !== 'undefined' && formData.industry === 'Healthcare' ? 'selected' : '' %>>Healthcare</option>
+                                <option value="E-commerce" <%= typeof formData !== 'undefined' && formData.industry === 'E-commerce' ? 'selected' : '' %>>E-commerce</option>
+                                <option value="Education" <%= typeof formData !== 'undefined' && formData.industry === 'Education' ? 'selected' : '' %>>Education</option>
+                                <option value="Finance" <%= typeof formData !== 'undefined' && formData.industry === 'Finance' ? 'selected' : '' %>>Finance</option>
+                                <option value="Real Estate" <%= typeof formData !== 'undefined' && formData.industry === 'Real Estate' ? 'selected' : '' %>>Real Estate</option>
+                                <option value="Manufacturing" <%= typeof formData !== 'undefined' && formData.industry === 'Manufacturing' ? 'selected' : '' %>>Manufacturing</option>
+                                <option value="Other" <%= typeof formData !== 'undefined' && formData.industry === 'Other' ? 'selected' : '' %>>Other</option>
                             </select>
                         </div>
                     </div>
@@ -484,22 +484,22 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="contactName">Your Name *</label>
-                            <input type="text" id="contactName" name="name" required>
+                            <input type="text" id="contactName" name="name" value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>" required>
                         </div>
                         <div class="form-group">
                             <label for="contactEmail">Email Address *</label>
-                            <input type="email" id="contactEmail" name="email" required>
+                            <input type="email" id="contactEmail" name="email" value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="contactPhone">Phone Number</label>
-                            <input type="tel" id="contactPhone" name="phone">
+                            <input type="tel" id="contactPhone" name="phone" value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>">
                         </div>
                         <div class="form-group">
                             <label for="currentWebsite">Current Website</label>
-                            <input type="url" id="currentWebsite" name="website" placeholder="https://">
+                            <input type="url" id="currentWebsite" name="website" value="<%= typeof formData !== 'undefined' ? formData.website || '' : '' %>" placeholder="https://">
                         </div>
                     </div>
                     
@@ -538,27 +538,27 @@
                             <label for="transformationBudget">Investment Budget (Optional)</label>
                             <select id="transformationBudget" name="budget">
                                 <option value="">Select budget range</option>
-                                <option value="Under $5,000">Under $5,000</option>
-                                <option value="$5,000 - $15,000">$5,000 - $15,000</option>
-                                <option value="$15,000 - $50,000">$15,000 - $50,000</option>
-                                <option value="$50,000+">$50,000+</option>
+                                <option value="Under $2,000" <%= typeof formData !== 'undefined' && formData.budget === 'Under $2,000' ? 'selected' : '' %>>Under $2,000</option>
+                                <option value="$2,000 - $4,000" <%= typeof formData !== 'undefined' && formData.budget === '$2,000 - $4,000' ? 'selected' : '' %>>$2,000 - $4,000</option>
+                                <option value="$4,000 - $6,000" <%= typeof formData !== 'undefined' && formData.budget === '$4,000 - $6,000' ? 'selected' : '' %>>$4,000 - $6,000</option>
+                                <option value="$6,000+" <%= typeof formData !== 'undefined' && formData.budget === '$6,000+' ? 'selected' : '' %>>$6,000+</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="transformationTimeline">Desired Timeline (Optional)</label>
                             <select id="transformationTimeline" name="timeline">
                                 <option value="">Select timeline</option>
-                                <option value="ASAP">ASAP</option>
-                                <option value="1-3 months">1-3 months</option>
-                                <option value="3-6 months">3-6 months</option>
-                                <option value="6+ months">6+ months</option>
+                                <option value="ASAP" <%= typeof formData !== 'undefined' && formData.timeline === 'ASAP' ? 'selected' : '' %>>ASAP</option>
+                                <option value="1-3 months" <%= typeof formData !== 'undefined' && formData.timeline === '1-3 months' ? 'selected' : '' %>>1-3 months</option>
+                                <option value="3-6 months" <%= typeof formData !== 'undefined' && formData.timeline === '3-6 months' ? 'selected' : '' %>>3-6 months</option>
+                                <option value="6+ months" <%= typeof formData !== 'undefined' && formData.timeline === '6+ months' ? 'selected' : '' %>>6+ months</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="transformationMessage">Tell us about your transformation vision *</label>
-                        <textarea id="transformationMessage" name="message" rows="4" placeholder="Describe your current challenges and what you hope to achieve through digital transformation... (minimum 10 characters)" required></textarea>
+                        <textarea id="transformationMessage" name="message" rows="4" placeholder="Describe your current challenges and what you hope to achieve through digital transformation... (minimum 10 characters)" required><%= typeof formData !== 'undefined' ? formData.message || '' : '' %></textarea>
                     </div>
                     
                     <div class="form-actions">
@@ -1211,6 +1211,13 @@
                     closeMessage();
                 }, 8000);
             }
+            
+            // Show modal with errors if there are validation errors
+            <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+                // Show the transformation modal with errors
+                transformationModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            <% } %>
             
             // Form validation helper
             const messageField = document.getElementById('transformationMessage');
