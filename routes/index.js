@@ -98,7 +98,7 @@ router.post('/package-quote', [
   body('price').trim().notEmpty().withMessage('Package price is required'),
   body('message').trim().isLength({ min: 10 }).withMessage('Project description must be at least 10 characters long'),
   body('timeline').optional().isIn(['ASAP', '1-2 weeks', '1 month', '2-3 months', 'Flexible']).withMessage('Please select a valid timeline'),
-  body('budget').optional().isIn(['Under $5,000', '$5,000 - $10,000', '$10,000 - $25,000', '$25,000+']).withMessage('Please select a valid budget range')
+  body('budget').optional().isIn(['Under $2,000', '$2,000 - $4,000', '$4,000 - $6,000', '$6,000+']).withMessage('Please select a valid budget range')
 ], async (req, res) => {
   const errors = validationResult(req);
   
@@ -156,7 +156,7 @@ router.post('/transformation', [
   body('company').trim().isLength({ min: 2 }).withMessage('Business name must be at least 2 characters long'),
   body('industry').isIn(['Technology', 'Healthcare', 'E-commerce', 'Education', 'Finance', 'Real Estate', 'Manufacturing', 'Other']).withMessage('Please select a valid industry'),
   body('goals').optional().trim(),
-  body('budget').optional().isIn(['Under $5,000', '$5,000 - $15,000', '$15,000 - $50,000', '$50,000+']).withMessage('Please select a valid budget range'),
+  body('budget').optional().isIn(['Under $2,000', '$2,000 - $4,000', '$4,000 - $6,000', '$6,000+']).withMessage('Please select a valid budget range'),
   body('timeline').optional().isIn(['ASAP', '1-3 months', '3-6 months', '6+ months']).withMessage('Please select a valid timeline'),
   body('message').trim().isLength({ min: 10 }).withMessage('Transformation vision must be at least 10 characters long')
 ], async (req, res) => {
