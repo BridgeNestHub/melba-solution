@@ -179,15 +179,14 @@
     <style>
         /* Dashboard-specific styles */
         .admin-main {
-            padding: 1.5rem;
+            padding: 0;
         }
 
         .dashboard-header {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
+            margin: 0 0 1.5rem 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -231,7 +230,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin: 0 1.5rem 1.5rem 1.5rem;
         }
 
         .stat-card {
@@ -280,7 +279,8 @@
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
+            margin: 0 1.5rem 1.5rem 1.5rem;
         }
 
         .dashboard-card {
@@ -492,7 +492,19 @@
 
         @media (max-width: 768px) {
             .admin-main {
-                padding: 1rem;
+                padding: 0;
+            }
+
+            .dashboard-header {
+                margin: 0 0 1rem 0;
+            }
+
+            .stats-grid {
+                margin: 0 1rem 1rem 1rem;
+            }
+
+            .dashboard-grid {
+                margin: 0 1rem 1rem 1rem;
             }
 
             .dashboard-header {

@@ -61,6 +61,9 @@
                         <li>Email Marketing</li>
                         <li>Analytics & Reporting</li>
                     </ul>
+                    <div class="service-image">
+                        <img src="/images/digitalmarketing.PNG" alt="Digital Marketing">
+                    </div>
                 </div>
 
                 <div id="ecommerce" class="service-content">
@@ -73,6 +76,9 @@
                         <li>Conversion Optimization</li>
                         <li>Mobile Commerce</li>
                     </ul>
+                    <div class="service-image">
+                        <img src="/images/ecommerce.PNG" alt="E-commerce Solutions">
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,7 +94,7 @@
                 <div class="package-card">
                     <div class="package-header">
                         <h3>Starter</h3>
-                        <div class="price">$2,500 - $5,000</div>
+                        <div class="price">$1,000 - $1,500</div>
                         <p class="package-subtitle">Perfect for small businesses</p>
                     </div>
                     <div class="package-features">
@@ -97,8 +103,8 @@
                             <li>5-page responsive website</li>
                             <li>Basic SEO setup</li>
                             <li>Contact form integration</li>
-                            <li>Mobile optimization</li>
-                            <li>3 months support</li>
+                            <li>Mobile and speed optimization</li>
+                            <li>1 month post launch support</li>
                         </ul>
                     </div>
                     <div class="package-timeline">
@@ -112,18 +118,18 @@
                 <div class="package-card featured">
                     <div class="package-header">
                         <h3>Professional</h3>
-                        <div class="price">$5,000 - $15,000</div>
+                        <div class="price">$2,000 - $5,000</div>
                         <p class="package-subtitle">Most popular choice</p>
                     </div>
                     <div class="package-features">
                         <h4>Includes:</h4>
                         <ul>
-                            <li>10-page custom website</li>
-                            <li>Advanced SEO optimization</li>
+                            <li>8–12 pages custom website (design + development)</li>
+                            <li>Advanced SEO optimization and analytics setup</li>
                             <li>E-commerce functionality</li>
-                            <li>CMS integration</li>
+                            <li>CMS integration & training</li>
                             <li>Analytics setup</li>
-                            <li>6 months support</li>
+                            <li>6 months support & small updates</li>
                         </ul>
                     </div>
                     <div class="package-timeline">
@@ -137,18 +143,18 @@
                 <div class="package-card">
                     <div class="package-header">
                         <h3>Enterprise</h3>
-                        <div class="price">$15,000+</div>
+                        <div class="price">$6,000+</div>
                         <p class="package-subtitle">For large-scale projects</p>
                     </div>
                     <div class="package-features">
                         <h4>Includes:</h4>
                         <ul>
-                            <li>Unlimited pages</li>
-                            <li>Custom functionality</li>
+                            <li>Unlimited pages & complex functionality</li>
+                            <li>Custom functionality, APIs, and advanced e-commerce</li>
                             <li>Advanced integrations</li>
-                            <li>Multi-language support</li>
-                            <li>Performance optimization</li>
-                            <li>12 months support</li>
+                            <li>Multi-language and accessibility support</li>
+                            <li>Performance & security optimization</li>
+                            <li>12 months support + optional SLAs</li>
                         </ul>
                     </div>
                     <div class="package-timeline">
@@ -175,28 +181,28 @@
                         <div class="factor">
                             <h4>Website Complexity</h4>
                             <ul>
-                                <li>Basic: $2,500 - $5,000</li>
-                                <li>Intermediate: $5,000 - $10,000</li>
-                                <li>Advanced: $10,000 - $25,000</li>
-                                <li>Enterprise: $25,000+</li>
+                                <li>Basic: $1,000 - $1,500</li>
+                                <li>Intermediate: $1,500 - $4,000</li>
+                                <li>Advanced: $4,000 - $8,000</li>
+                                <li>Enterprise: $8,000+</li>
                             </ul>
                         </div>
                         <div class="factor">
                             <h4>Additional Services</h4>
                             <ul>
-                                <li>Logo Design: $500 - $2,000</li>
-                                <li>SEO Setup: $1,000 - $3,000</li>
-                                <li>Content Creation: $100 - $300/page</li>
-                                <li>E-commerce: $2,000 - $8,000</li>
+                                <li>Logo Design: $100 - $400</li>
+                                <li>SEO Setup: $450 - $1,500</li>
+                                <li>Content Creation: $80 - $200/page</li>
+                                <li>E-commerce: $1,500 - $6,000</li>
                             </ul>
                         </div>
                         <div class="factor">
                             <h4>Ongoing Services</h4>
                             <ul>
-                                <li>Monthly Maintenance: $200 - $500</li>
-                                <li>Digital Marketing: $1,000 - $5,000/month</li>
-                                <li>Content Updates: $75 - $150/hour</li>
-                                <li>Technical Support: $100 - $200/hour</li>
+                                <li>Monthly Maintenance: $100 - $300</li>
+                                <li>Digital Marketing: $100 - $200/month</li>
+                                <li>Content Updates: $55 - $125/hour</li>
+                                <li>Technical Support / dev time: $75 - $150/hour</li>
                             </ul>
                         </div>
                     </div>
@@ -208,9 +214,9 @@
                         <div class="term">
                             <h4>Project Payment Schedule</h4>
                             <ul>
-                                <li>50% deposit to start project</li>
+                                <li>15% deposit to start project</li>
                                 <li>25% at design approval</li>
-                                <li>25% upon project completion</li>
+                                <li>60% upon project completion</li>
                             </ul>
                         </div>
                         <div class="term">
@@ -374,10 +380,10 @@
                             <label for="budget">Budget Range</label>
                             <select id="budget" name="budget">
                                 <option value="">Select budget</option>
-                                <option value="Under $5,000" <%= typeof formData !== 'undefined' && formData.budget === 'Under $5,000' ? 'selected' : '' %>>Under $5,000</option>
-                                <option value="$5,000 - $10,000" <%= typeof formData !== 'undefined' && formData.budget === '$5,000 - $10,000' ? 'selected' : '' %>>$5,000 - $10,000</option>
-                                <option value="$10,000 - $25,000" <%= typeof formData !== 'undefined' && formData.budget === '$10,000 - $25,000' ? 'selected' : '' %>>$10,000 - $25,000</option>
-                                <option value="$25,000+" <%= typeof formData !== 'undefined' && formData.budget === '$25,000+' ? 'selected' : '' %>>$25,000+</option>
+                                <option value="Under $2,000" <%= typeof formData !== 'undefined' && formData.budget === 'Under $2,000' ? 'selected' : '' %>>Under $2,000</option>
+                                <option value="$2,000 - $4,000" <%= typeof formData !== 'undefined' && formData.budget === '$2,000 - $4,000' ? 'selected' : '' %>>$2,000 - $4,000</option>
+                                <option value="$4,000 - $6,000" <%= typeof formData !== 'undefined' && formData.budget === '$4,000 - $6,000' ? 'selected' : '' %>>$4,000 - $6,000</option>
+                                <option value="$6,000+" <%= typeof formData !== 'undefined' && formData.budget === '$6,000+' ? 'selected' : '' %>>$6,000+</option>
                             </select>
                         </div>
                     </div>
@@ -428,6 +434,7 @@
     <%- include('../partials/footer') %>
 
     <script src="/js/main.js"></script>
+    <script src="/js/chat.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Package selection modal functionality

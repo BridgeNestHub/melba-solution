@@ -7,8 +7,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <h1>Taking Local Businesses Global</h1>
-            <p>Transform your local business into a recognized digital brand with our end-to-end digital solutions.</p>
+            <h1>Transform Your Local Business into a Global Brand</h1>
+            <p>We build stunning, high-performing digital experiences that turn visitors into loyal customers.</p>
             <div class="cta-buttons">
                 <a href="/contact" class="primary-btn">Get Started</a>
                 <a href="/services" class="secondary-btn">Our Services</a>
@@ -32,7 +32,7 @@
                 <p>Returning Clients</p>
             </div>
         </div>
-    </section>
+    </section> 
 
     <!-- Services Section -->
     <section class="services">
@@ -67,46 +67,72 @@
                 <a href="/services#ecommerce" class="learn-more">Learn More →</a>
             </div>
         </div>
+
+        <div class="services-value-prop reveal">
+            <h2>Your Website Is Your Best Salesperson</h2>
+            <p>
+                Potential customers interact with it every day to decide whether they want to do business with you. 
+                But if it’s outdated, non-responsive, and confusing, your customers end up having a frustrating 
+                experience instead of one that keeps them coming back for more.
+            </p>
+            <p>
+                At MelbaSolution Digital Agency, we design modern, responsive, and user-friendly websites that not only look great 
+                but also drive real business results — converting visitors into loyal customers.
+            </p>
+            <a href="/contact" class="primary-btn">Let’s Build Your Winning Website</a>
+        </div>
+        
+
     </section>
 
     <!-- Testimonials Preview -->
     <section class="testimonials-preview">
         <div class="section-header">
             <h2>What Our Clients Say</h2>
-            <p>Success stories from businesses we've transformed</p>
+            <p>Real feedback from Seattle-area businesses we’ve helped grow</p>
         </div>
         <div class="testimonials-grid">
             <div class="testimonial-card">
                 <div class="quote">
                     <i class="fas fa-quote-left"></i>
-                    <p>MelbaSolution transformed our online presence completely. Our website traffic increased by 300% within 3 months.</p>
+                    <p>
+                        MelbaSolution completely refreshed our shop’s website.  
+                        Customers often comment on how easy it is to find what they need,  
+                        and our online orders have noticeably increased.
+                    </p>
                 </div>
                 <div class="client-info">
                     <img src="/images/client1.jpg" alt="Michael Johnson">
                     <div>
-                        <h4>Michael Johnson</h4>
-                        <p>CEO, TechSolutions</p>
+                        <h4>Simon M.</h4>
+                        <p>Owner, Seattle Coffee Roasters</p>
                     </div>
                 </div>
             </div>
+    
             <div class="testimonial-card">
                 <div class="quote">
                     <i class="fas fa-quote-left"></i>
-                    <p>The branding work exceeded our expectations. We've gained so much recognition in our industry.</p>
+                    <p>
+                        The new branding captured exactly what makes our business unique.  
+                        We’ve had more walk-in customers this month than any month last year.
+                    </p>
                 </div>
                 <div class="client-info">
                     <img src="/images/client2.jpg" alt="Sarah Williams">
                     <div>
-                        <h4>Sarah Williams</h4>
-                        <p>Founder, GreenLife</p>
+                        <h4>Sarah W.</h4>
+                        <p>Owner, Fremont Boutique</p>
                     </div>
                 </div>
             </div>
         </div>
+    
         <div class="center-btn">
             <a href="/testimonials" class="primary-btn">View All Testimonials</a>
         </div>
     </section>
+    
 
     <!-- Industries Section -->
     <section class="industries">
@@ -265,6 +291,7 @@
     <%- include('../partials/footer') %>
 
     <script src="/js/main.js"></script>
+    <script src="/js/chat.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const consultationModal = document.getElementById('consultationModal');
@@ -384,6 +411,24 @@
                 consultationModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
             <% } %>
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const elements = document.querySelectorAll(".services-value-prop");
+
+            function revealOnScroll() {
+                elements.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    if (elementTop < windowHeight - 100) {
+                        el.classList.add("active");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", revealOnScroll);
+            revealOnScroll(); // Trigger on load
         });
     </script>
     

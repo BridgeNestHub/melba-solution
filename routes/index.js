@@ -45,14 +45,14 @@ router.get('/services', (req, res) => {
   });
 });
 
-// Portfolio page
-router.get('/portfolio', (req, res) => {
-  res.render('pages/portfolio', {
-    title: 'Portfolio - MelbaSolutionDigital Agency',
-    currentPage: 'portfolio',
-    metaDescription: 'View our portfolio of successful digital transformation projects and case studies from various industries.'
-  });
-});
+// Portfolio page - COMMENTED OUT FOR FUTURE USE
+// router.get('/portfolio', (req, res) => {
+//   res.render('pages/portfolio', {
+//     title: 'Portfolio - MelbaSolutionDigital Agency',
+//     currentPage: 'portfolio',
+//     metaDescription: 'View our portfolio of successful digital transformation projects and case studies from various industries.'
+//   });
+// });
 
 // Testimonials page
 router.get('/testimonials', (req, res) => {
@@ -367,7 +367,7 @@ function generateChatResponse(message) {
   }
   
   if (lowerMessage.includes('portfolio') || lowerMessage.includes('work')) {
-    return "You can view our portfolio at /portfolio. We've helped 100+ businesses transform digitally. What industry are you in?";
+    return "We've helped 100+ businesses transform digitally. You can see our client testimonials and success stories. What industry are you in?";
   }
   
   return "Thanks for your message! How can I help you with your digital transformation needs today?";
