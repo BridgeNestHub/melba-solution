@@ -2,36 +2,44 @@ const nodemailer = require('nodemailer');
 
 // Email configuration with extensive debugging
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT),
+  host: 'smtppro.zoho.com', // Alternative Zoho SMTP server
+  port: 587,
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
-  },
-  tls: {
-    rejectUnauthorized: false
   },
   debug: true,
   logger: true
 });
 
 // Debug Railway env vars
-console.log('🔍 RAILWAY ENV DEBUG:');
-console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
-console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
-console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
-console.log('EMAIL_SECURE:', process.env.EMAIL_SECURE);
+console.log('🔍 EMAIL CONFIG LOADED');
+console.log('Host: smtppro.zoho.com, Port: 587');
+console.log('User:', process.env.EMAIL_USER);
+console.log('Password length:', process.env.EMAIL_PASSWORD?.length);
 
-// Test connection on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('❌ SMTP Connection Failed:', error);
-  } else {
-    console.log('✅ SMTP Server Ready');
-  }
-});
+// Test network connectivity from Railway
+const net = require('net');
+const testConnection = (host, port) => {
+  const socket = new net.Socket();
+  socket.setTimeout(5000);
+  socket.connect(port, host, () => {
+    console.log(`✅ ${host}:${port} - Connection successful`);
+    socket.destroy();
+  });
+  socket.on('error', (err) => {
+    console.log(`❌ ${host}:${port} - Connection failed: ${err.message}`);
+  });
+  socket.on('timeout', () => {
+    console.log(`⏰ ${host}:${port} - Connection timeout`);
+    socket.destroy();
+  });
+};
+
+testConnection('smtp.zoho.com', 587);
+testConnection('smtppro.zoho.com', 587);
+testConnection('smtp.gmail.com', 587);
 
 // Send contact form email
 const sendContactForm = async (formData) => {
