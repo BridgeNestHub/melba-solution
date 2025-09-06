@@ -1,14 +1,28 @@
 const nodemailer = require('nodemailer');
 
 // Email configuration
+// Debug email configuration
+console.log('Email config debug:', {
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE,
+  hasUser: !!process.env.EMAIL_USER,
+  hasPassword: !!process.env.EMAIL_PASSWORD
+});
+
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: process.env.EMAIL_PORT || 587,
+  port: parseInt(process.env.EMAIL_PORT) || 587,
   secure: process.env.EMAIL_SECURE === 'true',
   auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD.replace(/"/g, '')
-  } : undefined
+    pass: process.env.EMAIL_PASSWORD.replace(/["\']/g, '')
+  } : undefined,
+  connectionTimeout: 10000,
+  greetingTimeout: 5000,
+  socketTimeout: 10000,
+  debug: true,
+  logger: true
 });
 
 // Send contact form email
@@ -153,17 +167,38 @@ const sendContactForm = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      console.log('Attempting to send emails for:', { name, email, service });
+      console.log('Mail options:', { from: mailOptions.from, to: mailOptions.to, subject: mailOptions.subject });
+      
+      // Test connection first
+      console.log('Testing SMTP connection...');
+      await transporter.verify();
+      console.log('SMTP connection verified successfully');
+      
+      // Send emails with individual error handling
+      console.log('Sending admin notification...');
       await transporter.sendMail(mailOptions);
+      console.log('Admin notification sent');
+      
+      console.log('Sending client confirmation...');
       await transporter.sendMail(clientMailOptions);
-      console.log('Contact form emails sent successfully');
+      console.log('Client confirmation sent');
+      
+      console.log('All emails sent successfully');
     } else {
-      console.log('Email not configured - contact form data logged:', { name, email, service });
-      // Don't throw error if email is not configured, just log the data
+      console.log('Email credentials missing:', {
+        hasUser: !!process.env.EMAIL_USER,
+        hasPassword: !!process.env.EMAIL_PASSWORD
+      });
     }
   } catch (error) {
-    console.error('Error sending contact form emails:', error);
-    // Log the error but don't throw it to prevent form submission failure
-    console.log('Form data saved despite email error:', { name, email, service });
+    console.error('Email error details:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
+    // Always continue - don't fail the form
   }
 };
 
