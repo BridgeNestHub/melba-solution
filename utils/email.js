@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 // Email configuration
-const transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransporter({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: process.env.EMAIL_PORT || 587,
   secure: false,
@@ -134,9 +134,8 @@ const sendContactForm = async (formData) => {
           
           <p>In the meantime, feel free to:</p>
           <ul>
-            <li>Check out our <a href="http://localhost:3000/portfolio" style="color: #2f5fda;">portfolio</a></li>
-            <li>Read our <a href="http://localhost:3000/testimonials" style="color: #2f5fda;">client testimonials</a></li>
-            <li>Learn more about our <a href="http://localhost:3000/services" style="color: #2f5fda;">services</a></li>
+            <li>Read our <a href="https://www.melbasolution.com/testimonials" style="color: #2f5fda;">client testimonials</a></li>
+            <li>Learn more about our <a href="https://www.melbasolution.com/services" style="color: #2f5fda;">services</a></li>
           </ul>
           
           <p>Best regards,<br>The MelbaSolution Digital Agency Team</p>
@@ -145,7 +144,7 @@ const sendContactForm = async (formData) => {
         <div style="background-color: #f9f9f9; padding: 15px; text-align: center; color: #666;">
           <p style="margin: 0;">
             📧 contact@melbasolution.com | 📞 +1 (206) 240-9455<br>
-            <a href="http://localhost:3000" style="color: #2f5fda;">www.melbasolution.com</a>
+            <a href="https://www.melbasolution.com" style="color: #2f5fda;">www.melbasolution.com</a>
           </p>
         </div>
       </div>
@@ -382,9 +381,8 @@ const sendPackageQuote = async (formData) => {
           
           <p>In the meantime, feel free to:</p>
           <ul>
-            <li>Check out our <a href="http://localhost:3000/portfolio" style="color: #2f5fda;">portfolio</a> for similar projects</li>
-            <li>Read our <a href="http://localhost:3000/testimonials" style="color: #2f5fda;">client success stories</a></li>
-            <li>Learn more about our <a href="http://localhost:3000/services" style="color: #2f5fda;">comprehensive services</a></li>
+            <li>Read our <a href="https://www.melbasolution.com/testimonials" style="color: #2f5fda;">client success stories</a></li>
+            <li>Learn more about our <a href="https://www.melbasolution.com/services" style="color: #2f5fda;">comprehensive services</a></li>
           </ul>
           
           <p>Best regards,<br>The MelbaSolution Digital Agency Team</p>
@@ -393,7 +391,7 @@ const sendPackageQuote = async (formData) => {
         <div style="background-color: #f9f9f9; padding: 15px; text-align: center; color: #666;">
           <p style="margin: 0;">
             📧 contact@melbasolution.com | 📞 +1 (206) 240-9455<br>
-            <a href="http://localhost:3000" style="color: #2f5fda;">www.melbasolution.com</a>
+            <a href="https://www.melbasolution.com" style="color: #2f5fda;">www.melbasolution.com</a>
           </p>
         </div>
       </div>
@@ -547,9 +545,8 @@ const sendTransformationForm = async (formData) => {
           
           <p>While you wait, explore our success stories:</p>
           <ul>
-            <li>View our <a href="http://localhost:3000/portfolio" style="color: #2f5fda;">global transformation portfolio</a></li>
-            <li>Read <a href="http://localhost:3000/testimonials" style="color: #2f5fda;">client success stories</a></li>
-            <li>Learn about our <a href="http://localhost:3000/services" style="color: #2f5fda;">transformation services</a></li>
+            <li>Read <a href="https://www.melbasolution.com/testimonials" style="color: #2f5fda;">client success stories</a></li>
+            <li>Learn about our <a href="https://www.melbasolution.com/services" style="color: #2f5fda;">transformation services</a></li>
           </ul>
           
           <p>Ready to go global? We're here to make it happen!</p>
@@ -560,7 +557,7 @@ const sendTransformationForm = async (formData) => {
         <div style="background-color: #f9f9f9; padding: 15px; text-align: center; color: #666;">
           <p style="margin: 0;">
             📧 contact@melbasolution.com | 📞 +1 (206) 240-9455<br>
-            <a href="http://localhost:3000" style="color: #2f5fda;">www.melbasolution.com</a>
+            <a href="https://www.melbasolution.com" style="color: #2f5fda;">www.melbasolution.com</a>
           </p>
         </div>
       </div>

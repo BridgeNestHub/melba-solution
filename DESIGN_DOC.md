@@ -41,7 +41,7 @@ A modern, responsive website for Robe Digital Agency that showcases their servic
 ## File Structure
 
 ```
-robe-website/
+melba-website/
 ├── .env                      # Environment variables
 ├── app.js                    # Main Express application
 ├── package.json              # Project dependencies and scripts

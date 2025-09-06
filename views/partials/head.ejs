@@ -4,6 +4,8 @@
     <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'MelbaSolution Digital Agency - We help local businesses transform into global brands through comprehensive digital solutions including web development, branding, and digital marketing.' %>">
     <meta name="keywords" content="digital agency, web development, branding, digital marketing, seo, ecommerce, local business, global brand">
     <meta name="author" content="MelbaSolution Digital Agency">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<%= process.env.SITE_URL || 'http://localhost:3000' %><%= typeof currentPath !== 'undefined' ? currentPath : '' %>">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
