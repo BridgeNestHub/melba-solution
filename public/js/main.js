@@ -28,21 +28,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            // Don't prevent default - let the form submit normally to the server
-            // The server will handle validation and redirect back with success/error messages
+            e.preventDefault();
             
-            // Just add loading state to the submit button
             const submitBtn = this.querySelector('.submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');
+            const originalText = btnText.textContent;
             
+            // Add loading state
             if (submitBtn && btnText) {
                 submitBtn.classList.add('btn--loading');
                 btnText.textContent = 'Sending...';
                 submitBtn.disabled = true;
             }
             
-            // Let the form submit normally - don't prevent default
-            // The server will handle the rest and show our modal on the response page
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Submit via fetch
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    return response.text();
+                }
+            })
+            .then(html => {
+                if (html) {
+                    document.open();
+                    document.write(html);
+                    document.close();
+                }
+            })
+            .catch(error => {
+                console.error('Form submission error:', error);
+                alert('Sorry, there was an error sending your message. Please try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                if (submitBtn && btnText) {
+                    submitBtn.classList.remove('btn--loading');
+                    btnText.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
         });
     }
 

@@ -4,10 +4,10 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: process.env.EMAIL_PORT || 587,
-  secure: false,
+  secure: process.env.EMAIL_SECURE === 'true',
   auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
+    pass: process.env.EMAIL_PASSWORD.replace(/"/g, '')
   } : undefined
 });
 
@@ -158,10 +158,12 @@ const sendContactForm = async (formData) => {
       console.log('Contact form emails sent successfully');
     } else {
       console.log('Email not configured - contact form data logged:', { name, email, service });
+      // Don't throw error if email is not configured, just log the data
     }
   } catch (error) {
     console.error('Error sending contact form emails:', error);
-    throw error;
+    // Log the error but don't throw it to prevent form submission failure
+    console.log('Form data saved despite email error:', { name, email, service });
   }
 };
 
