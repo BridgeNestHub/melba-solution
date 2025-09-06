@@ -185,11 +185,13 @@ const sendContactForm = async (formData) => {
       console.log('Client confirmation sent');
       
       console.log('All emails sent successfully');
+      return true; // Email success
     } else {
       console.log('Email credentials missing:', {
         hasUser: !!process.env.EMAIL_USER,
         hasPassword: !!process.env.EMAIL_PASSWORD
       });
+      throw new Error('Email not configured');
     }
   } catch (error) {
     console.error('Email error details:', {
@@ -198,7 +200,7 @@ const sendContactForm = async (formData) => {
       command: error.command,
       response: error.response
     });
-    // Always continue - don't fail the form
+    throw error; // Throw error to handle in route
   }
 };
 
