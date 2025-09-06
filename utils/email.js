@@ -2,20 +2,27 @@ const nodemailer = require('nodemailer');
 
 // Email configuration with extensive debugging
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: process.env.EMAIL_SECURE === 'true',
-  auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
+  host: process.env.EMAIL_HOST,
+  port: parseInt(process.env.EMAIL_PORT),
+  secure: false,
+  auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
-  } : undefined,
-  connectionTimeout: 60000,
-  greetingTimeout: 30000,
-  socketTimeout: 60000,
-  pool: false,
+  },
+  tls: {
+    rejectUnauthorized: false
+  },
   debug: true,
   logger: true
 });
+
+// Debug Railway env vars
+console.log('🔍 RAILWAY ENV DEBUG:');
+console.log('EMAIL_HOST:', process.env.EMAIL_HOST);
+console.log('EMAIL_PORT:', process.env.EMAIL_PORT);
+console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
+console.log('EMAIL_SECURE:', process.env.EMAIL_SECURE);
 
 // Test connection on startup
 transporter.verify((error, success) => {
