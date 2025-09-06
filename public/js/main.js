@@ -41,17 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.disabled = true;
             }
             
-            // Get form data
+            // Get form data as URL encoded
             const formData = new FormData(this);
+            const urlEncodedData = new URLSearchParams(formData).toString();
             
             // Submit via fetch
             fetch(this.action, {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: urlEncodedData
             })
             .then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
+                if (response.ok) {
+                    // Success - redirect to success page
+                    window.location.href = '/contact?success=contact';
                 } else {
                     return response.text();
                 }
@@ -65,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Form submission error:', error);
-                alert('Sorry, there was an error sending your message. Please try again.');
+                showErrorModal('Sorry, there was an error sending your message. Please try again.');
             })
             .finally(() => {
                 // Reset button state
@@ -173,6 +178,43 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Show error modal function
+    function showErrorModal(message) {
+        const modalHTML = `
+            <div class="message-overlay" id="errorOverlay">
+                <div class="error-message-modal">
+                    <div class="message-content">
+                        <div class="message-icon error-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="message-text">
+                            <h3>Error</h3>
+                            <p>${message}</p>
+                        </div>
+                        <button class="close-btn" onclick="closeErrorModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Auto-close after 5 seconds
+        setTimeout(() => {
+            closeErrorModal();
+        }, 5000);
+    }
+
+    // Close error modal function
+    window.closeErrorModal = function() {
+        const overlay = document.getElementById('errorOverlay');
+        if (overlay) {
+            overlay.classList.add('fade-out');
+            setTimeout(() => overlay.remove(), 300);
+        }
+    };
 
     // Animation on scroll
     function animateOnScroll() {
