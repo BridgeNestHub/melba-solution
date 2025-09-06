@@ -219,6 +219,12 @@ router.post('/transformation', [
 
 // Contact form submission - UPDATED FOR MONGODB
 router.post('/contact', [
+  // Add debug logging at the start
+  (req, res, next) => {
+    console.log('🚀 CONTACT FORM SUBMISSION START');
+    console.log('Form data received:', req.body);
+    next();
+  },
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
   body('phone').optional({ checkFalsy: true }).isMobilePhone().withMessage('Please enter a valid phone number'),
@@ -255,8 +261,12 @@ router.post('/contact', [
       source: 'Contact Form'
     });
     
+    console.log('✅ Database save successful');
+    
+    console.log('📧 Calling email service...');
     // Send email notification
     await emailService.sendContactForm(req.body);
+    console.log('✅ Email service completed');
     
     // Redirect to prevent form resubmission on refresh
     res.redirect('/contact?success=contact');
