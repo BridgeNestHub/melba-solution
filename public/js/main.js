@@ -28,58 +28,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Don't prevent default - let the form submit normally to the server
+            // The server will handle validation and redirect back with success/error messages
             
+            // Just add loading state to the submit button
             const submitBtn = this.querySelector('.submit-btn');
             const btnText = submitBtn.querySelector('.btn-text');
-            const originalText = btnText.textContent;
             
-            // Add loading state
             if (submitBtn && btnText) {
                 submitBtn.classList.add('btn--loading');
                 btnText.textContent = 'Sending...';
                 submitBtn.disabled = true;
             }
             
-            // Get form data as URL encoded
-            const formData = new FormData(this);
-            const urlEncodedData = new URLSearchParams(formData).toString();
-            
-            // Submit via fetch
-            fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: urlEncodedData
-            })
-            .then(response => {
-                if (response.ok) {
-                    // Success - redirect to success page
-                    window.location.href = '/contact?success=contact';
-                } else {
-                    return response.text();
-                }
-            })
-            .then(html => {
-                if (html) {
-                    document.open();
-                    document.write(html);
-                    document.close();
-                }
-            })
-            .catch(error => {
-                console.error('Form submission error:', error);
-                showErrorModal('Sorry, there was an error sending your message. Please try again.');
-            })
-            .finally(() => {
-                // Reset button state
-                if (submitBtn && btnText) {
-                    submitBtn.classList.remove('btn--loading');
-                    btnText.textContent = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+            // Let the form submit normally - don't prevent default
+            // The server will handle the rest and show our modal on the response page
         });
     }
 
@@ -178,43 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Show error modal function
-    function showErrorModal(message) {
-        const modalHTML = `
-            <div class="message-overlay" id="errorOverlay">
-                <div class="error-message-modal">
-                    <div class="message-content">
-                        <div class="message-icon error-icon">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="message-text">
-                            <h3>Error</h3>
-                            <p>${message}</p>
-                        </div>
-                        <button class="close-btn" onclick="closeErrorModal()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        
-        // Auto-close after 5 seconds
-        setTimeout(() => {
-            closeErrorModal();
-        }, 5000);
-    }
-
-    // Close error modal function
-    window.closeErrorModal = function() {
-        const overlay = document.getElementById('errorOverlay');
-        if (overlay) {
-            overlay.classList.add('fade-out');
-            setTimeout(() => overlay.remove(), 300);
-        }
-    };
 
     // Animation on scroll
     function animateOnScroll() {

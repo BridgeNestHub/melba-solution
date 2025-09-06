@@ -255,22 +255,18 @@ router.post('/contact', [
       source: 'Contact Form'
     });
     
-    // Send email notification - only show success if email works
-    const emailSent = await emailService.sendContactForm(req.body);
+    // Send email notification
+    await emailService.sendContactForm(req.body);
     
-    if (emailSent) {
-      // Redirect to prevent form resubmission on refresh
-      res.redirect('/contact?success=contact');
-    } else {
-      throw new Error('Email sending failed');
-    }
+    // Redirect to prevent form resubmission on refresh
+    res.redirect('/contact?success=contact');
   } catch (error) {
     console.error('Contact form error:', error);
     res.render('pages/contact', {
       title: 'Contact Us - MelbaSolutionDigital Agency',
       currentPage: 'contact',
       metaDescription: 'Get in touch with MelbaSolutionDigital Agency. Let\'s discuss how we can help transform your business digitally.',
-      errors: [{ msg: 'Your message was saved but email delivery failed. We\'ll contact you soon.' }],
+      errors: [{ msg: 'Sorry, there was an error sending your message. Please try again.' }],
       formData: req.body,
       successMessage: null
     });
