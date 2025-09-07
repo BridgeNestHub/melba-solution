@@ -14,9 +14,7 @@ const transporter = nodemailer.createTransport({
       ciphers: 'SSLv3',
       rejectUnauthorized: false
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000
+
 });
 
 // Transporter ready - verification happens during actual email sending

@@ -4,7 +4,12 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const helmet = require('helmet');
 const cors = require('cors');
-require('dotenv').config();
+
+// Load environment variables from .env file in development
+// Railway automatically injects environment variables in production
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
