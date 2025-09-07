@@ -1,20 +1,13 @@
 const nodemailer = require('nodemailer');
 const { htmlToText } = require('html-to-text');
 
-// Create reusable transporter object (same as bafa-website)
+// Gmail configuration for Railway
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.NODE_ENV === 'production' ? 465 : parseInt(process.env.EMAIL_PORT) || 587,
-    secure: process.env.NODE_ENV === 'production' ? true : false,
+    service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD
-    },
-    tls: {
-      ciphers: 'SSLv3',
-      rejectUnauthorized: false
-    },
-
+    }
 });
 
 // Transporter ready - verification happens during actual email sending
