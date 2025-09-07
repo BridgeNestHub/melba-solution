@@ -1,45 +1,7 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-// Email configuration with extensive debugging
-const transporter = nodemailer.createTransport({
-  host: 'smtppro.zoho.com', // Alternative Zoho SMTP server
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  },
-  debug: true,
-  logger: true
-});
-
-// Debug Railway env vars
-console.log('🔍 EMAIL CONFIG LOADED');
-console.log('Host: smtppro.zoho.com, Port: 587');
-console.log('User:', process.env.EMAIL_USER);
-console.log('Password length:', process.env.EMAIL_PASSWORD?.length);
-
-// Test network connectivity from Railway
-const net = require('net');
-const testConnection = (host, port) => {
-  const socket = new net.Socket();
-  socket.setTimeout(5000);
-  socket.connect(port, host, () => {
-    console.log(`✅ ${host}:${port} - Connection successful`);
-    socket.destroy();
-  });
-  socket.on('error', (err) => {
-    console.log(`❌ ${host}:${port} - Connection failed: ${err.message}`);
-  });
-  socket.on('timeout', () => {
-    console.log(`⏰ ${host}:${port} - Connection timeout`);
-    socket.destroy();
-  });
-};
-
-testConnection('smtp.zoho.com', 587);
-testConnection('smtppro.zoho.com', 587);
-testConnection('smtp.gmail.com', 587);
+// Set the SendGrid API Key from environment variables
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Send contact form email
 const sendContactForm = async (formData) => {
@@ -47,12 +9,8 @@ const sendContactForm = async (formData) => {
   
   console.log('🔧 EMAIL DEBUG START');
   console.log('Environment:', process.env.NODE_ENV);
-  console.log('Email Host:', process.env.EMAIL_HOST);
-  console.log('Email Port:', process.env.EMAIL_PORT);
-  console.log('Email Secure:', process.env.EMAIL_SECURE);
-  console.log('Email User:', process.env.EMAIL_USER);
-  console.log('Has Password:', !!process.env.EMAIL_PASSWORD);
-  console.log('Password Length:', process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD.length : 0);
+  console.log('Using SendGrid API');
+  console.log('Has API Key:', !!process.env.SENDGRID_API_KEY);
   
   const serviceNames = {
     'web-development': 'Web Development',
@@ -142,17 +100,17 @@ const sendContactForm = async (formData) => {
     </div>
   `;
 
+  // SendGrid requires the `from` email to be a verified sender
   const mailOptions = {
-    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER || 'contact@melbasolution.com',
+    from: process.env.EMAIL_USER,
     subject: `New Contact Form: ${serviceNames[service] || service} - ${name}`,
     html: emailHtml,
-    replyTo: email
   };
 
   const clientMailOptions = {
-    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: email,
+    from: process.env.EMAIL_USER,
     subject: 'Thank you for contacting MelbaSolution Digital Agency',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -170,28 +128,27 @@ const sendContactForm = async (formData) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      console.log('📧 Sending admin email...');
-      const adminResult = await transporter.sendMail(mailOptions);
-      console.log('✅ Admin email sent:', adminResult.messageId);
+    if (process.env.SENDGRID_API_KEY) {
+      console.log('📧 Sending admin email via SendGrid...');
+      await sgMail.send(mailOptions);
+      console.log('✅ Admin email sent successfully.');
       
-      console.log('📧 Sending client email...');
-      const clientResult = await transporter.sendMail(clientMailOptions);
-      console.log('✅ Client email sent:', clientResult.messageId);
+      console.log('📧 Sending client email via SendGrid...');
+      await sgMail.send(clientMailOptions);
+      console.log('✅ Client email sent successfully.');
       
       console.log('🎉 All emails sent successfully');
     } else {
-      console.log('❌ Email credentials missing');
+      console.log('❌ SendGrid API key is missing');
     }
   } catch (error) {
     console.error('💥 EMAIL ERROR DETAILS:');
     console.error('Error Type:', error.constructor.name);
     console.error('Error Message:', error.message);
-    console.error('Error Code:', error.code);
-    console.error('Error Command:', error.command);
-    console.error('Error Response:', error.response);
-    console.error('Error ResponseCode:', error.responseCode);
     console.error('Full Error Object:', JSON.stringify(error, null, 2));
+    if (error.response) {
+      console.error('Error response body:', error.response.body);
+    }
   }
   console.log('🔧 EMAIL DEBUG END');
 };
