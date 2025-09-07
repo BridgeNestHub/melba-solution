@@ -263,10 +263,13 @@ router.post('/contact', [
     
     console.log('✅ Database save successful');
     
-    console.log('📧 Calling email service...');
-    // Send email notification
-    await emailService.sendContactForm(req.body);
-    console.log('✅ Email service completed');
+    // Send email notifications (non-critical)
+    try {
+      await emailService.sendContactForm(req.body);
+      console.log('✅ Email notifications sent');
+    } catch (emailError) {
+      console.error('❌ Email error (non-critical):', emailError.message);
+    }
     
     // Redirect to prevent form resubmission on refresh
     res.redirect('/contact?success=contact');

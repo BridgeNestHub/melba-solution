@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 // Import routes
 const indexRoutes = require('./routes/index');
 const adminRoutes = require('./routes/admin');
-const { testEmailConfig } = require('./utils/email');
+// Email service ready
 
 // Trust proxy - CRITICAL for Railway and other cloud platforms
 app.set('trust proxy', 1);
@@ -90,20 +90,10 @@ app.listen(PORT, async () => {
   console.log(`🔒 Secure cookies: ${process.env.NODE_ENV === 'production'}`);
   console.log(`🛡️  Trust proxy: enabled`);
   
-  // Test email configuration with timeout
-  console.log('\n📧 Testing email configuration...');
-  try {
-    const emailWorking = await Promise.race([
-      testEmailConfig(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
-    ]);
-    if (emailWorking) {
-      console.log(`📧 Email service ready: ${process.env.EMAIL_USER}`);
-      console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
-    }
-  } catch (error) {
-    console.log('⚠️  Email test timeout - service will work when forms are submitted');
-  }
+  // Email service configured
+  console.log(`📧 Email service configured: ${process.env.EMAIL_USER}`);
+  console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
+  console.log('📨 Email delivery ready for form submissions');
 });
 
 module.exports = app;

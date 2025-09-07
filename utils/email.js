@@ -1,18 +1,78 @@
 const nodemailer = require('nodemailer');
+const { htmlToText } = require('html-to-text');
 
-// Email configuration
+// Create reusable transporter object (same as bafa-website)
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.zoho.com',
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: process.env.EMAIL_SECURE === 'true' || false,
-  auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  } : undefined,
-  tls: {
-    rejectUnauthorized: false
-  }
+    host: process.env.EMAIL_HOST,
+    port: parseInt(process.env.EMAIL_PORT) || 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    },
+    tls: {
+      ciphers: 'SSLv3',
+      rejectUnauthorized: false
+    }
 });
+
+// Verify transporter connection
+transporter.verify((error) => {
+    if (error) {
+        console.error('Email transporter verification failed:', error);
+    } else {
+        console.log('Email transporter is ready to send messages');
+    }
+});
+
+// Generic email function (same as bafa-website)
+const sendContactEmail = async (formData) => {
+    try {
+        const htmlContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                    .header { background-color: #2f5fda; color: white; padding: 20px; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px; }
+                    .content { padding: 20px; background-color: #f9f9f9; border-bottom: 1px solid #eee; }
+                    .footer { padding: 15px; text-align: center; font-size: 12px; color: #777; background-color: #f0f0f0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h2>${formData.subject}</h2>
+                    </div>
+                    <div class="content">
+                        ${formData.name ? `<p><strong>Name:</strong> ${formData.name}</p>` : ''}
+                        <p>${formData.message.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    <div class="footer">
+                        <p>This email was sent from the MelbaSolution website.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+        const mailOptions = {
+            from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+            to: formData.email,
+            subject: formData.subject,
+            text: htmlToText(htmlContent),
+            html: htmlContent,
+            replyTo: formData.replyTo || formData.email
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent successfully to ${formData.email} with subject: "${formData.subject}"`);
+    } catch (err) {
+        console.error(`Error sending email to ${formData.email}:`, err);
+        throw err;
+    }
+};
 
 // Send contact form email
 const sendContactForm = async (formData) => {
@@ -155,16 +215,58 @@ const sendContactForm = async (formData) => {
   };
 
   try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await transporter.sendMail(mailOptions);
-      await transporter.sendMail(clientMailOptions);
-      console.log('Contact form emails sent successfully');
-    } else {
-      console.log('Email not configured - contact form data logged:', { name, email, service });
-    }
+    // Send admin notification
+    const adminEmailData = {
+      name,
+      email: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
+      subject: `New Contact Form: ${serviceNames[service] || service} - ${name}`,
+      message: `
+      New Contact Form Submission:
+      
+      Name: ${name}
+      Email: ${email}
+      Phone: ${phone || 'N/A'}
+      Company: ${company || 'N/A'}
+      Service: ${serviceNames[service] || service}
+      Budget: ${budgetRanges[budget] || budget || 'N/A'}
+      Timeline: ${timelineOptions[timeline] || timeline || 'N/A'}
+      Message: ${message}
+      
+      Submitted on: ${new Date().toLocaleString()}
+      `,
+      replyTo: email
+    };
+    
+    await sendContactEmail(adminEmailData);
+    console.log('✅ Admin email sent');
+    
+    // Send customer confirmation
+    const userEmailData = {
+      name,
+      email: email,
+      subject: 'Thank you for contacting MelbaSolution Digital Agency',
+      message: `
+      Dear ${name},
+      
+      Thank you for reaching out to MelbaSolution Digital Agency. We've received your inquiry about ${serviceNames[service] || service} and will get back to you within 24 hours.
+      
+      Here's a summary of your submission:
+      
+      Service: ${serviceNames[service] || service}
+      ${budget ? `Budget: ${budgetRanges[budget] || budget}` : ''}
+      ${timeline ? `Timeline: ${timelineOptions[timeline] || timeline}` : ''}
+      
+      Best regards,
+      The MelbaSolution Digital Agency Team
+      `
+    };
+    
+    await sendContactEmail(userEmailData);
+    console.log('✅ Customer email sent');
+    
   } catch (error) {
-    console.error('Error sending contact form emails:', error);
-    throw error;
+    console.error('❌ Email error:', error.message);
+    // Don't throw - let the form submission succeed even if email fails
   }
 };
 
@@ -594,9 +696,6 @@ const testEmailConfig = async () => {
 };
 
 module.exports = {
-  sendContactForm,
-  sendPackageQuote,
-  sendTransformationForm,
-  addToNewsletter,
-  testEmailConfig
+  sendContactEmail,
+  sendContactForm
 };
