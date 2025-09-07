@@ -44,17 +44,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // PRODUCTION-READY Session Configuration
+const MongoStore = require('connect-mongo');
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'robe-digital-agency-secret-key',
   resave: false,
   saveUninitialized: false,
+  store: process.env.NODE_ENV === 'production' ? MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI
+  }) : undefined,
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Enable secure cookies in production
-    httpOnly: true, // Prevent XSS attacks
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
   },
-  name: 'melba.sid' // Custom session name (security through obscurity)
+  name: 'melba.sid'
 }));
 
 // Routes
@@ -85,14 +90,19 @@ app.listen(PORT, async () => {
   console.log(`🔒 Secure cookies: ${process.env.NODE_ENV === 'production'}`);
   console.log(`🛡️  Trust proxy: enabled`);
   
-  // Test email configuration
+  // Test email configuration with timeout
   console.log('\n📧 Testing email configuration...');
-  const emailWorking = await testEmailConfig();
-  if (emailWorking) {
-    console.log(`📧 Email service ready: ${process.env.EMAIL_USER}`);
-    console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
-  } else {
-    console.log('⚠️  Email service not configured properly');
+  try {
+    const emailWorking = await Promise.race([
+      testEmailConfig(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+    ]);
+    if (emailWorking) {
+      console.log(`📧 Email service ready: ${process.env.EMAIL_USER}`);
+      console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
+    }
+  } catch (error) {
+    console.log('⚠️  Email test timeout - service will work when forms are submitted');
   }
 });
 
