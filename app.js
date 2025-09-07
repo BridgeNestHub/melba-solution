@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 // Import routes
 const indexRoutes = require('./routes/index');
 const adminRoutes = require('./routes/admin');
+const { testEmailConfig } = require('./utils/email');
 
 // Trust proxy - CRITICAL for Railway and other cloud platforms
 app.set('trust proxy', 1);
@@ -78,11 +79,21 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Robe Digital Agency server running on port ${PORT}`);
   console.log(`📱 Visit: http://localhost:${PORT}`);
   console.log(`🔒 Secure cookies: ${process.env.NODE_ENV === 'production'}`);
   console.log(`🛡️  Trust proxy: enabled`);
+  
+  // Test email configuration
+  console.log('\n📧 Testing email configuration...');
+  const emailWorking = await testEmailConfig();
+  if (emailWorking) {
+    console.log(`📧 Email service ready: ${process.env.EMAIL_USER}`);
+    console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
+  } else {
+    console.log('⚠️  Email service not configured properly');
+  }
 });
 
 module.exports = app;
