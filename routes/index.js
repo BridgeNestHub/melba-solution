@@ -265,10 +265,15 @@ router.post('/contact', [
     
     // Send email notifications (non-critical)
     try {
+      console.log('📧 Starting email process...');
       await emailService.sendContactForm(req.body);
-      console.log('✅ Email notifications sent');
+      console.log('✅ Email notifications sent successfully');
     } catch (emailError) {
-      console.error('❌ Email error (non-critical):', emailError.message);
+      console.error('❌ Email error details:', {
+        message: emailError.message,
+        code: emailError.code,
+        stack: emailError.stack
+      });
     }
     
     // Redirect to prevent form resubmission on refresh

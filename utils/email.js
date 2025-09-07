@@ -16,14 +16,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Verify transporter connection
-transporter.verify((error) => {
-    if (error) {
-        console.error('Email transporter verification failed:', error);
-    } else {
-        console.log('Email transporter is ready to send messages');
-    }
-});
+// Transporter ready - verification happens during actual email sending
 
 // Generic email function (same as bafa-website)
 const sendContactEmail = async (formData) => {
@@ -58,7 +51,7 @@ const sendContactEmail = async (formData) => {
         `;
 
         const mailOptions = {
-            from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+            from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
             to: formData.email,
             subject: formData.subject,
             text: htmlToText(htmlContent),
@@ -218,7 +211,7 @@ const sendContactForm = async (formData) => {
     // Send admin notification
     const adminEmailData = {
       name,
-      email: process.env.CONTACT_EMAIL || process.env.EMAIL_USER,
+      email: 'contact@melbasolution.com',
       subject: `New Contact Form: ${serviceNames[service] || service} - ${name}`,
       message: `
       New Contact Form Submission:
