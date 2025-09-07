@@ -693,5 +693,8 @@ const testEmailConfig = async () => {
 
 module.exports = {
   sendContactEmail,
-  sendContactForm
+  sendContactForm,
+  sendPackageQuote,
+  sendTransformationForm,
+  addToNewsletter
 };
