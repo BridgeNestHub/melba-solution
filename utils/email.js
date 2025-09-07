@@ -4,8 +4,8 @@ const { htmlToText } = require('html-to-text');
 // Create reusable transporter object (same as bafa-website)
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT) || 587,
-    secure: false,
+    port: process.env.NODE_ENV === 'production' ? 465 : parseInt(process.env.EMAIL_PORT) || 587,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD
