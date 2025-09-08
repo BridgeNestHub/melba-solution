@@ -1,21 +1,14 @@
 const nodemailer = require('nodemailer');
 
-// Email configuration with timeout and retry settings
+// Email configuration
 const transporter = nodemailer.createTransporter({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: process.env.EMAIL_SECURE === 'true',
+  port: process.env.EMAIL_PORT || 587,
+  secure: false,
   auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD.replace(/"/g, '') // Remove quotes if present
-  } : undefined,
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 5000,    // 5 seconds
-  socketTimeout: 15000,     // 15 seconds
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 100,
-  rateLimit: 14 // messages per second
+    pass: process.env.EMAIL_PASSWORD
+  } : undefined
 });
 
 // Send contact form email
@@ -160,24 +153,15 @@ const sendContactForm = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      // Send emails with timeout handling
-      await Promise.race([
-        Promise.all([
-          transporter.sendMail(mailOptions),
-          transporter.sendMail(clientMailOptions)
-        ]),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email timeout')), 30000)
-        )
-      ]);
+      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(clientMailOptions);
       console.log('Contact form emails sent successfully');
     } else {
       console.log('Email not configured - contact form data logged:', { name, email, service });
     }
   } catch (error) {
     console.error('Error sending contact form emails:', error);
-    // Don't throw error to prevent form submission failure
-    // The contact is already saved to database
+    throw error;
   }
 };
 
@@ -262,22 +246,15 @@ const addToNewsletter = async (email) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await Promise.race([
-        Promise.all([
-          transporter.sendMail(adminNotification),
-          transporter.sendMail(welcomeEmail)
-        ]),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email timeout')), 30000)
-        )
-      ]);
+      await transporter.sendMail(adminNotification);
+      await transporter.sendMail(welcomeEmail);
       console.log('Newsletter emails sent successfully');
     } else {
       console.log('Email not configured - newsletter subscription logged:', email);
     }
   } catch (error) {
     console.error('Error sending newsletter emails:', error);
-    // Don't throw error for newsletter - it's not critical
+    throw error;
   }
 };
 
@@ -423,22 +400,15 @@ const sendPackageQuote = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await Promise.race([
-        Promise.all([
-          transporter.sendMail(mailOptions),
-          transporter.sendMail(clientMailOptions)
-        ]),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email timeout')), 30000)
-        )
-      ]);
+      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(clientMailOptions);
       console.log('Package quote emails sent successfully');
     } else {
       console.log('Email not configured - package quote logged:', { fullName, email, packageType, price });
     }
   } catch (error) {
     console.error('Error sending package quote emails:', error);
-    // Don't throw error to prevent form submission failure
+    throw error;
   }
 };
 
@@ -596,22 +566,15 @@ const sendTransformationForm = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await Promise.race([
-        Promise.all([
-          transporter.sendMail(mailOptions),
-          transporter.sendMail(clientMailOptions)
-        ]),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email timeout')), 30000)
-        )
-      ]);
+      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(clientMailOptions);
       console.log('Transformation form emails sent successfully');
     } else {
       console.log('Email not configured - transformation request logged:', { name, email, company, industry });
     }
   } catch (error) {
     console.error('Error sending transformation form emails:', error);
-    // Don't throw error to prevent form submission failure
+    throw error;
   }
 };
 
