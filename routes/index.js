@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const emailService = require('../utils/email');
@@ -14,7 +13,6 @@ router.get('/', (req, res) => {
   res.render('pages/index', {
     title: 'MelbaSolution- Digital Transformation Agency | Home',
     currentPage: 'home',
-    currentPath: '/',
     metaDescription: 'MelbaSolutionDigital Agency - We help local businesses transform into global brands through comprehensive digital solutions including web development, branding, and digital marketing.',
     successMessage: successMessage,
     errors: [],
@@ -27,7 +25,6 @@ router.get('/about', (req, res) => {
   res.render('pages/about', {
     title: 'About Us - MelbaSolutionDigital Agency',
     currentPage: 'about',
-    currentPath: '/about',
     metaDescription: 'Learn about MelbaSolutionDigital Agency, our mission, values, and the team behind transforming local businesses into global brands.'
   });
 });
@@ -41,7 +38,6 @@ router.get('/services', (req, res) => {
   res.render('pages/services', {
     title: 'Our Services - MelbaSolutionDigital Agency',
     currentPage: 'services',
-    currentPath: '/services',
     metaDescription: 'Discover our comprehensive digital services: web development, branding, digital marketing, and e-commerce solutions.',
     successMessage: successMessage,
     errors: [],
@@ -67,7 +63,6 @@ router.get('/testimonials', (req, res) => {
   res.render('pages/testimonials', {
     title: 'Client Testimonials - MelbaSolutionDigital Agency',
     currentPage: 'testimonials',
-    currentPath: '/testimonials',
     metaDescription: 'Read what our clients say about their experience working with MelbaSolutionDigital Agency and their business transformation results.',
     successMessage: successMessage,
     errors: [],
@@ -84,7 +79,6 @@ router.get('/contact', (req, res) => {
   res.render('pages/contact', {
     title: 'Contact Us - MelbaSolutionDigital Agency',
     currentPage: 'contact',
-    currentPath: '/contact',
     metaDescription: 'Get in touch with MelbaSolutionDigital Agency. Let\'s discuss how we can help transform your business digitally.',
     successMessage: successMessage,
     errors: [],
@@ -219,12 +213,6 @@ router.post('/transformation', [
 
 // Contact form submission - UPDATED FOR MONGODB
 router.post('/contact', [
-  // Add debug logging at the start
-  (req, res, next) => {
-    console.log('🚀 CONTACT FORM SUBMISSION START');
-    console.log('Form data received:', req.body);
-    next();
-  },
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters long'),
   body('email').isEmail().normalizeEmail().withMessage('Please enter a valid email address'),
   body('phone').optional({ checkFalsy: true }).isMobilePhone().withMessage('Please enter a valid phone number'),
@@ -261,20 +249,8 @@ router.post('/contact', [
       source: 'Contact Form'
     });
     
-    console.log('✅ Database save successful');
-    
-    // Send email notifications (non-critical)
-    try {
-      console.log('📧 Starting email process...');
-      await emailService.sendContactForm(req.body);
-      console.log('✅ Email notifications sent successfully');
-    } catch (emailError) {
-      console.error('❌ Email error details:', {
-        message: emailError.message,
-        code: emailError.code,
-        stack: emailError.stack
-      });
-    }
+    // Send email notification
+    await emailService.sendContactForm(req.body);
     
     // Redirect to prevent form resubmission on refresh
     res.redirect('/contact?success=contact');
@@ -379,17 +355,6 @@ router.post('/api/chat', (req, res) => {
     response: response,
     timestamp: new Date().toISOString()
   });
-});
-
-// SEO Routes
-router.get('/sitemap.xml', (req, res) => {
-  res.type('application/xml');
-  res.sendFile(path.join(__dirname, '../public/sitemap.xml'));
-});
-
-router.get('/robots.txt', (req, res) => {
-  res.type('text/plain');
-  res.sendFile(path.join(__dirname, '../public/robots.txt'));
 });
 
 function generateChatResponse(message) {

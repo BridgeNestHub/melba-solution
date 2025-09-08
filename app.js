@@ -4,12 +4,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const helmet = require('helmet');
 const cors = require('cors');
-
-// Load environment variables from .env file in development
-// Railway automatically injects environment variables in production
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,7 +12,6 @@ const PORT = process.env.PORT || 3000;
 // Import routes
 const indexRoutes = require('./routes/index');
 const adminRoutes = require('./routes/admin');
-// Email service ready
 
 // Trust proxy - CRITICAL for Railway and other cloud platforms
 app.set('trust proxy', 1);
@@ -49,22 +43,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // PRODUCTION-READY Session Configuration
-const MongoStore = require('connect-mongo');
-
 app.use(session({
   secret: process.env.SESSION_SECRET || 'robe-digital-agency-secret-key',
   resave: false,
   saveUninitialized: false,
-  store: process.env.NODE_ENV === 'production' ? MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI
-  }) : undefined,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'production', // Enable secure cookies in production
+    httpOnly: true, // Prevent XSS attacks
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
   },
-  name: 'melba.sid'
+  name: 'melba.sid' // Custom session name (security through obscurity)
 }));
 
 // Routes
@@ -89,16 +78,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`🚀 Robe Digital Agency server running on port ${PORT}`);
   console.log(`📱 Visit: http://localhost:${PORT}`);
   console.log(`🔒 Secure cookies: ${process.env.NODE_ENV === 'production'}`);
   console.log(`🛡️  Trust proxy: enabled`);
-  
-  // Email service configured
-  console.log(`📧 Email service configured: ${process.env.EMAIL_USER}`);
-  console.log(`📬 Contact emails will be sent to: ${process.env.CONTACT_EMAIL}`);
-  console.log('📨 Email delivery ready for form submissions');
 });
 
 module.exports = app;

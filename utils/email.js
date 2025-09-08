@@ -1,65 +1,22 @@
 const nodemailer = require('nodemailer');
-const { htmlToText } = require('html-to-text');
 
-// Gmail configuration for Railway
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    }
+// Email configuration with timeout and retry settings
+const transporter = nodemailer.createTransporter({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.EMAIL_PORT) || 587,
+  secure: process.env.EMAIL_SECURE === 'true',
+  auth: process.env.EMAIL_USER && process.env.EMAIL_PASSWORD ? {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD.replace(/"/g, '') // Remove quotes if present
+  } : undefined,
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 5000,    // 5 seconds
+  socketTimeout: 15000,     // 15 seconds
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
+  rateLimit: 14 // messages per second
 });
-
-// Transporter ready - verification happens during actual email sending
-
-// Generic email function (same as bafa-website)
-const sendContactEmail = async (formData) => {
-    try {
-        const htmlContent = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                    .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                    .header { background-color: #2f5fda; color: white; padding: 20px; text-align: center; border-top-left-radius: 8px; border-top-right-radius: 8px; }
-                    .content { padding: 20px; background-color: #f9f9f9; border-bottom: 1px solid #eee; }
-                    .footer { padding: 15px; text-align: center; font-size: 12px; color: #777; background-color: #f0f0f0; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <h2>${formData.subject}</h2>
-                    </div>
-                    <div class="content">
-                        ${formData.name ? `<p><strong>Name:</strong> ${formData.name}</p>` : ''}
-                        <p>${formData.message.replace(/\n/g, '<br>')}</p>
-                    </div>
-                    <div class="footer">
-                        <p>This email was sent from the MelbaSolution website.</p>
-                    </div>
-                </div>
-            </body>
-            </html>
-        `;
-
-        const mailOptions = {
-            from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-            to: formData.email,
-            subject: formData.subject,
-            text: htmlToText(htmlContent),
-            html: htmlContent,
-            replyTo: formData.replyTo || formData.email
-        };
-
-        await transporter.sendMail(mailOptions);
-        console.log(`Email sent successfully to ${formData.email} with subject: "${formData.subject}"`);
-    } catch (err) {
-        console.error(`Error sending email to ${formData.email}:`, err);
-        throw err;
-    }
-};
 
 // Send contact form email
 const sendContactForm = async (formData) => {
@@ -154,8 +111,8 @@ const sendContactForm = async (formData) => {
   `;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
-    to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'contact@melbasolution.com',
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER || 'contact@melbasolution.com',
     subject: `New Contact Form: ${serviceNames[service] || service} - ${name}`,
     html: emailHtml,
     replyTo: email
@@ -163,7 +120,7 @@ const sendContactForm = async (formData) => {
 
   // Send confirmation email to client
   const clientMailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Thank you for contacting MelbaSolution Digital Agency',
     html: `
@@ -202,58 +159,25 @@ const sendContactForm = async (formData) => {
   };
 
   try {
-    // Send admin notification
-    const adminEmailData = {
-      name,
-      email: 'contact@melbasolution.com',
-      subject: `New Contact Form: ${serviceNames[service] || service} - ${name}`,
-      message: `
-      New Contact Form Submission:
-      
-      Name: ${name}
-      Email: ${email}
-      Phone: ${phone || 'N/A'}
-      Company: ${company || 'N/A'}
-      Service: ${serviceNames[service] || service}
-      Budget: ${budgetRanges[budget] || budget || 'N/A'}
-      Timeline: ${timelineOptions[timeline] || timeline || 'N/A'}
-      Message: ${message}
-      
-      Submitted on: ${new Date().toLocaleString()}
-      `,
-      replyTo: email
-    };
-    
-    await sendContactEmail(adminEmailData);
-    console.log('✅ Admin email sent');
-    
-    // Send customer confirmation
-    const userEmailData = {
-      name,
-      email: email,
-      subject: 'Thank you for contacting MelbaSolution Digital Agency',
-      message: `
-      Dear ${name},
-      
-      Thank you for reaching out to MelbaSolution Digital Agency. We've received your inquiry about ${serviceNames[service] || service} and will get back to you within 24 hours.
-      
-      Here's a summary of your submission:
-      
-      Service: ${serviceNames[service] || service}
-      ${budget ? `Budget: ${budgetRanges[budget] || budget}` : ''}
-      ${timeline ? `Timeline: ${timelineOptions[timeline] || timeline}` : ''}
-      
-      Best regards,
-      The MelbaSolution Digital Agency Team
-      `
-    };
-    
-    await sendContactEmail(userEmailData);
-    console.log('✅ Customer email sent');
-    
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      // Send emails with timeout handling
+      await Promise.race([
+        Promise.all([
+          transporter.sendMail(mailOptions),
+          transporter.sendMail(clientMailOptions)
+        ]),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email timeout')), 30000)
+        )
+      ]);
+      console.log('Contact form emails sent successfully');
+    } else {
+      console.log('Email not configured - contact form data logged:', { name, email, service });
+    }
   } catch (error) {
-    console.error('❌ Email error:', error.message);
-    // Don't throw - let the form submission succeed even if email fails
+    console.error('Error sending contact form emails:', error);
+    // Don't throw error to prevent form submission failure
+    // The contact is already saved to database
   }
 };
 
@@ -265,8 +189,8 @@ const addToNewsletter = async (email) => {
   
   // Send admin notification
   const adminNotification = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
-    to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'contact@melbasolution.com',
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER || 'contact@melbasolution.com',
     subject: 'New Newsletter Subscription',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -301,7 +225,7 @@ const addToNewsletter = async (email) => {
   
   // Send welcome email to subscriber
   const welcomeEmail = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Welcome to MelbaSolution Digital Agency Newsletter!',
     html: `
@@ -338,15 +262,22 @@ const addToNewsletter = async (email) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await transporter.sendMail(adminNotification);
-      await transporter.sendMail(welcomeEmail);
+      await Promise.race([
+        Promise.all([
+          transporter.sendMail(adminNotification),
+          transporter.sendMail(welcomeEmail)
+        ]),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email timeout')), 30000)
+        )
+      ]);
       console.log('Newsletter emails sent successfully');
     } else {
       console.log('Email not configured - newsletter subscription logged:', email);
     }
   } catch (error) {
     console.error('Error sending newsletter emails:', error);
-    throw error;
+    // Don't throw error for newsletter - it's not critical
   }
 };
 
@@ -431,8 +362,8 @@ const sendPackageQuote = async (formData) => {
   `;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
-    to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'contact@melbasolution.com',
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER || 'contact@melbasolution.com',
     subject: `Package Quote Request: ${packageType} - ${fullName}`,
     html: emailHtml,
     replyTo: email
@@ -440,7 +371,7 @@ const sendPackageQuote = async (formData) => {
 
   // Send confirmation email to client
   const clientMailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: `Quote Request Received - ${packageType} Package`,
     html: `
@@ -492,15 +423,22 @@ const sendPackageQuote = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await transporter.sendMail(mailOptions);
-      await transporter.sendMail(clientMailOptions);
+      await Promise.race([
+        Promise.all([
+          transporter.sendMail(mailOptions),
+          transporter.sendMail(clientMailOptions)
+        ]),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email timeout')), 30000)
+        )
+      ]);
       console.log('Package quote emails sent successfully');
     } else {
       console.log('Email not configured - package quote logged:', { fullName, email, packageType, price });
     }
   } catch (error) {
     console.error('Error sending package quote emails:', error);
-    throw error;
+    // Don't throw error to prevent form submission failure
   }
 };
 
@@ -585,8 +523,8 @@ const sendTransformationForm = async (formData) => {
   `;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
-    to: process.env.CONTACT_EMAIL || process.env.EMAIL_USER || 'contact@melbasolution.com',
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER || 'contact@melbasolution.com',
     subject: `🚀 Digital Transformation Request: ${company} (${industry})`,
     html: emailHtml,
     replyTo: email
@@ -594,7 +532,7 @@ const sendTransformationForm = async (formData) => {
 
   // Send confirmation email to client
   const clientMailOptions = {
-    from: process.env.EMAIL_FROM || `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
+    from: `"MelbaSolution Digital Agency" <${process.env.EMAIL_USER}>`,
     to: email,
     subject: `Welcome to Your Digital Transformation Journey, ${name}!`,
     html: `
@@ -658,32 +596,26 @@ const sendTransformationForm = async (formData) => {
 
   try {
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      await transporter.sendMail(mailOptions);
-      await transporter.sendMail(clientMailOptions);
+      await Promise.race([
+        Promise.all([
+          transporter.sendMail(mailOptions),
+          transporter.sendMail(clientMailOptions)
+        ]),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email timeout')), 30000)
+        )
+      ]);
       console.log('Transformation form emails sent successfully');
     } else {
       console.log('Email not configured - transformation request logged:', { name, email, company, industry });
     }
   } catch (error) {
     console.error('Error sending transformation form emails:', error);
-    throw error;
-  }
-};
-
-// Test email configuration
-const testEmailConfig = async () => {
-  try {
-    await transporter.verify();
-    console.log('✅ Email configuration is valid');
-    return true;
-  } catch (error) {
-    console.error('❌ Email configuration error:', error.message);
-    return false;
+    // Don't throw error to prevent form submission failure
   }
 };
 
 module.exports = {
-  sendContactEmail,
   sendContactForm,
   sendPackageQuote,
   sendTransformationForm,
